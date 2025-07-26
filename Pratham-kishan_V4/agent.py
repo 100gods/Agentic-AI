@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from google.adk import Agent
 from google.adk.agents import SequentialAgent, LoopAgent, ParallelAgent
 from google.adk.tools.tool_context import ToolContext
-from google.adk.tools import Google Search, exit_loop
+from google.adk.tools import google_search, exit_loop
 
 cloud_logging_client = google.cloud.logging.Client()
 cloud_logging_client.setup_logging()
@@ -51,7 +51,7 @@ scheme_researcher = Agent(
     Use the 'append_to_state' tool to add your research to the 'SCHEME_DATA' field.
     Summarize the schemes you found.
     """,
-    tools=[Google Search, append_to_state],
+    tools=[google_search, append_to_state],
 )
 
 gov_scheme_critic = Agent(
@@ -98,7 +98,7 @@ mandi_researcher = Agent(
     Use the 'append_to_state' tool to add the mandi price data to the 'MANDI_PRICE_DATA' field.
     Summarize the prices you found.
     """,
-    tools=[Google Search, append_to_state],
+    tools=[google_search, append_to_state],
 )
 
 mandi_profit = Agent(
@@ -166,7 +166,7 @@ crop_management_agent = Agent(
     Use the 'Google Search' tool for information if needed.
     Use the 'append_to_state' tool to add your advice to the 'CROP_MANAGEMENT_ADVICE' field.
     """,
-    tools=[Google Search, append_to_state],
+    tools=[google_search, append_to_state],
 )
 
 weather_agent = Agent(
@@ -184,7 +184,7 @@ weather_agent = Agent(
     Analyze how the weather might impact the CROP_DETAILS and suggest necessary actions.
     Use the 'append_to_state' tool to add your weather report and impact analysis to the 'WEATHER_REPORT' field.
     """,
-    tools=[Google Search, append_to_state],
+    tools=[google_search, append_to_state],
 )
 
 farming_new_tech_agent = Agent(
@@ -201,7 +201,7 @@ farming_new_tech_agent = Agent(
     Use the 'Google Search' tool for information.
     Use the 'append_to_state' tool to add your suggestions to the 'NEW_TECH_SUGGESTIONS' field.
     """,
-    tools=[Google Search, append_to_state],
+    tools=[google_search, append_to_state],
 )
 
 pratham_kishan_agent = ParallelAgent(
