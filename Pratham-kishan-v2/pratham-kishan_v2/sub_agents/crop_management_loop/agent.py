@@ -5,7 +5,7 @@ from google.adk.tools import google_search
 
 from . import prompts
 
-MODEL = "gemini-2.0-flash-lite
+MODEL = "gemini-2.0-flash-lite"
 
 class CriticAgent(Agent):
     """
