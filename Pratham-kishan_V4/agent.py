@@ -10,7 +10,7 @@ from google.adk.tools.tool_context import ToolContext
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools import google_search, exit_loop
 from google.genai import types
-from callback_logging import log_query_to_model, log_model_response
+from .callback_logging import log_query_to_model, log_model_response
 from . import prompt
 
 cloud_logging_client = google.cloud.logging.Client()
