@@ -206,7 +206,7 @@ farming_new_tech_agent = Agent(
 
 pratham_kishan_agent = LlmAgent(
     name="pratham_kishan_agent",
-    model = model_name
+    model = model_name,
     description=(
             "guide users through a structured process to receive farming "
             "advice by orchestrating a series of expert subagents. help them "
