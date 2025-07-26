@@ -11,6 +11,7 @@ from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools import google_search, exit_loop
 from google.genai import types
 from .callback_logging import log_query_to_model, log_model_response
+from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
 from . import prompt
 
 cloud_logging_client = google.cloud.logging.Client()
