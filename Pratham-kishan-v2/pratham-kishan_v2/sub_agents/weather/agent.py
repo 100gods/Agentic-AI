@@ -3,7 +3,7 @@ from google.adk.agents import LlmAgent
 from google.adk.tools import google_search
 from . import prompts
 
-MODEL = "gemini-2.0-flash"
+MODEL = "gemini-2.0-flash-lite"
 weather_sub_agent = LlmAgent(
     name = "weather_sub_agent",
     model = MODEL,

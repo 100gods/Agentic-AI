@@ -19,7 +19,7 @@ from google.adk.tools import google_search
 
 from . import prompt
 
-MODEL="gemini-2.0-flash"
+MODEL="gemini-2.0-flash-lite"
 
 weather_information_agent = Agent(
     model=MODEL,

@@ -25,7 +25,7 @@ from .sub_agents.farming_tech import farming_tech_agent
 from .sub_agents.weather_information import weather_information_agent
 
 
-MODEL = "gemini-2.0-flash"
+MODEL = "gemini-2.0-flash-lite"
 
 
 farmer_advisor = LlmAgent(

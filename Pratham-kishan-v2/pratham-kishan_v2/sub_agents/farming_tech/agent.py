@@ -3,7 +3,7 @@ from google.adk.agents import Agent,LoopAgent, LlmAgent, BaseAgent, SequentialAg
 from google.adk.tools import google_search
 from . import prompts
 
-MODEL = "gemini-2.0-flash"
+MODEL = "gemini-2.0-flash-lite"
 
 farming_tech_sub_agent = LlmAgent(
     name = "farming_tech_sub_agent",
