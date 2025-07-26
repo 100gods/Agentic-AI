@@ -8,6 +8,7 @@ type Translations = {
 export const translations: Translations = {
     English: {
         // Homepage
+        welcome: 'Welcome',
         loginCreateProfile: 'Login / Create Profile',
         intelligentPartner: 'Your intelligent partner in farming',
         orExploreFeatures: 'Or explore features manually',
@@ -167,6 +168,9 @@ export const translations: Translations = {
         saveProfile: 'Save Profile',
         profileSaved: 'Profile Saved!',
         profileSavedDesc: 'Your profile information has been updated.',
+        welcomeName: 'Welcome, {{name}}! Your profile has been saved.',
+        failedToSaveProfile: "Failed to save your profile. Please try again.",
+
 
         // Schemes Page
         schemesDesc: 'Discover central and state government schemes available for farmers.',
@@ -212,6 +216,7 @@ export const translations: Translations = {
         failedToGetAdvice: 'Failed to get financial advice. Please try again.',
     },
     Hindi: {
+        welcome: 'नमस्ते',
         loginCreateProfile: 'लॉगिन / प्रोफ़ाइल बनाएं',
         intelligentPartner: 'खेती में आपका बुद्धिमान साथी',
         orExploreFeatures: 'या मैन्युअल रूप से सुविधाएँ देखें',
@@ -361,6 +366,8 @@ export const translations: Translations = {
         saveProfile: 'प्रोफ़ाइल सहेजें',
         profileSaved: 'प्रोफ़ाइल सहेजी गई!',
         profileSavedDesc: 'आपकी प्रोफ़ाइल जानकारी अपडेट कर दी गई है।',
+        welcomeName: 'नमस्ते, {{name}}! आपकी प्रोफ़ाइल सहेज ली गई है।',
+        failedToSaveProfile: 'आपकी प्रोफ़ाइल सहेजने में विफल। कृपया पुन: प्रयास करें।',
 
         schemesDesc: 'किसानों के लिए उपलब्ध केंद्रीय और राज्य सरकार की योजनाओं की खोज करें।',
         eligibility: 'पात्रता',
@@ -401,6 +408,7 @@ export const translations: Translations = {
         failedToGetAdvice: 'वित्तीय सलाह प्राप्त करने में विफल। कृपया पुन: प्रयास करें।',
     },
     Spanish: {
+        welcome: 'Bienvenido',
         loginCreateProfile: 'Iniciar sesión / Crear perfil',
         intelligentPartner: 'Su socio inteligente en la agricultura',
         orExploreFeatures: 'O explore las características manualmente',
@@ -550,6 +558,8 @@ export const translations: Translations = {
         saveProfile: 'Guardar perfil',
         profileSaved: '¡Perfil guardado!',
         profileSavedDesc: 'La información de tu perfil ha sido actualizada.',
+        welcomeName: '¡Bienvenido, {{name}}! Tu perfil ha sido guardado.',
+        failedToSaveProfile: 'No se pudo guardar tu perfil. Por favor, inténtalo de nuevo.',
 
         schemesDesc: 'Descubra los esquemas del gobierno central y estatal disponibles para los agricultores.',
         eligibility: 'Elegibilidad',
@@ -590,6 +600,7 @@ export const translations: Translations = {
         failedToGetAdvice: 'No se pudo obtener asesoramiento financiero. Por favor, inténtelo de nuevo.',
     },
     Marathi: {
+        welcome: 'स्वागत आहे',
         loginCreateProfile: 'लॉगिन / प्रोफाइल तयार करा',
         intelligentPartner: 'शेतीमधील तुमचा बुद्धिमान भागीदार',
         orExploreFeatures: 'किंवा वैशिष्ट्ये मॅन्युअली एक्सप्लोर करा',
@@ -739,6 +750,8 @@ export const translations: Translations = {
         saveProfile: 'प्रोफाइल जतन करा',
         profileSaved: 'प्रोफाइल जतन केली!',
         profileSavedDesc: 'तुमची प्रोफाइल माहिती अपडेट केली गेली आहे.',
+        welcomeName: 'स्वागत आहे, {{name}}! तुमची प्रोफाइल जतन झाली आहे.',
+        failedToSaveProfile: 'तुमची प्रोफाइल जतन करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.',
 
         schemesDesc: 'शेतकऱ्यांसाठी उपलब्ध असलेल्या केंद्र आणि राज्य सरकारच्या योजना शोधा.',
         eligibility: 'पात्रता',

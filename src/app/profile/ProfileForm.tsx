@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,6 +31,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 export default function ProfileForm() {
     const { toast } = useToast();
     const { t } = useContext(LanguageContext);
+    const router = useRouter();
 
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
@@ -43,11 +45,21 @@ export default function ProfileForm() {
     const isLoading = form.formState.isSubmitting;
 
     const onSubmit = (data: ProfileFormValues) => {
-        console.log(data);
-        toast({
-            title: t('profileSaved'),
-            description: t('profileSavedDesc'),
-        });
+        try {
+            localStorage.setItem('userName', data.fullName);
+            toast({
+                title: t('profileSaved'),
+                description: t('welcomeName', { name: data.fullName }),
+            });
+            router.push('/');
+        } catch (error) {
+            console.error("Failed to save profile or redirect", error);
+            toast({
+                title: t('errorOccurred'),
+                description: t('failedToSaveProfile'),
+                variant: 'destructive',
+            })
+        }
     };
 
     return (

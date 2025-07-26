@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Leaf, CloudSun, MessageSquare, Landmark, BookOpen, Droplets, Briefcase, BarChart, ArrowRight, Bell } from 'lucide-react';
@@ -17,6 +17,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 export default function Home() {
   const { t, language, setLanguage } = useContext(LanguageContext);
+  const [userName, setUserName] = useState<string | null>(null);
+
+  useEffect(() => {
+    // This runs on the client, after the component mounts
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      setUserName(storedName);
+    }
+  }, []);
+
 
   const features = [
     {
@@ -107,7 +117,7 @@ export default function Home() {
         </div>
         <Button asChild>
           <Link href="/profile">
-            <User className="mr-2" /> {t('loginCreateProfile')}
+            <User className="mr-2" /> {userName ? `${t('welcome')}, ${userName.split(' ')[0]}`: t('loginCreateProfile')}
           </Link>
         </Button>
       </header>
