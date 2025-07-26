@@ -55,7 +55,7 @@ scheme_researcher = LlmAgent(
     tools=[google_search],
 )
 
-gov_scheme_critic = LlmAgent(
+gov_scheme_critic = Agent(
     name="gov_scheme_critic",
     model=model_name,
     description="Maximizes benefits from government schemes.",
@@ -86,7 +86,7 @@ gov_scheme_agent = LoopAgent(
 )
 
 # Mandi Price Agents
-mandi_researcher = LlmAgent(
+mandi_researcher = Agent(
     name="mandi_researcher",
     model=model_name,
     description="Researches current mandi prices for specified crops.",
@@ -101,7 +101,7 @@ mandi_researcher = LlmAgent(
     tools=[google_search],
 )
 
-mandi_profit = LlmAgent(
+mandi_profit = Agent(
     name="mandi_profit",
     model=model_name,
     description="Calculates potential profit based on mandi prices and crop details.",
@@ -119,7 +119,7 @@ mandi_profit = LlmAgent(
     tools=[append_to_state],
 )
 
-mandi_critic = LlmAgent(
+mandi_critic = Agent(
     name="mandi_critic",
     model=model_name,
     description="Suggests ways to maximize profit from mandi sales.",
@@ -152,7 +152,7 @@ mandi_price_agent = LoopAgent(
 )
 
 # Individual Pratham Kisan Agents
-crop_management_agent = LlmAgent(
+crop_management_agent = Agent(
     name="crop_management_agent",
     model=model_name,
     description="Provides advice on crop management.",
@@ -166,7 +166,7 @@ crop_management_agent = LlmAgent(
     tools=[google_search],
 )
 
-weather_agent = LlmAgent(
+weather_agent = Agent(
     name="weather_agent",
     model=model_name,
     description="Provides weather forecasts and their impact on crops.",
@@ -178,7 +178,7 @@ weather_agent = LlmAgent(
     tools=[google_search],
 )
 
-farming_new_tech_agent = LlmAgent(
+farming_new_tech_agent = Agent(
     name="farming_new_tech_agent",
     model=model_name,
     description="Suggests new farming technologies and practices.",
@@ -191,7 +191,7 @@ farming_new_tech_agent = LlmAgent(
     tools=[google_search],
 )
 
-pratham_kishan_agent = LlmAgent(
+pratham_kishan_agent = Agent(
     name="pratham_kishan_agent",
     model = model_name,
     description=(
