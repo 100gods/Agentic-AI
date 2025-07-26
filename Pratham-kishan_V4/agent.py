@@ -89,9 +89,6 @@ gov_scheme_agent = LoopAgent(
         scheme_researcher,
         gov_scheme_critic
     ],
-    generate_content_config=types.GenerateContentConfig(
-            temperature=0,
-        ),
     max_iterations=3,
 )
 
