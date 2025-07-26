@@ -10,6 +10,7 @@ from google.adk.tools.tool_context import ToolContext
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools import google_search, exit_loop
 from google.genai import types
+from callback_logging import log_query_to_model, log_model_response
 from . import prompt
 
 cloud_logging_client = google.cloud.logging.Client()
@@ -53,6 +54,8 @@ scheme_researcher = LlmAgent(
     Use the 'Google Search' tool to find relevant government schemes for the provided CROP_DETAILS.
     Summarize the schemes you found.
     """,
+    before_model_callback=log_query_to_model,
+    after_model_callback=log_model_response,
     generate_content_config=types.GenerateContentConfig(
             temperature=0,
         ),
@@ -76,6 +79,8 @@ gov_scheme_critic = Agent(
     If the schemes are optimal or no further improvements can be made, use the 'exit_loop' tool.
     Explain your decision and briefly summarize the feedback you have provided.
     """,
+    before_model_callback=log_query_to_model,
+    after_model_callback=log_model_response,
     generate_content_config=types.GenerateContentConfig(
             temperature=0,
         ),
@@ -105,6 +110,8 @@ mandi_researcher = Agent(
     Use the 'Google Search' tool to find current mandi prices for the specified CROP_DETAILS.
     Summarize the prices you found.
     """,
+    before_model_callback=log_query_to_model,
+    after_model_callback=log_model_response,
     generate_content_config=types.GenerateContentConfig(
             temperature=0,
         ),
@@ -126,6 +133,8 @@ mandi_profit = Agent(
     calculate the potential profit.
     Use the 'append_to_state' tool to add your profit calculation to the 'PROFIT_ANALYSIS' field.
     """,
+    before_model_callback=log_query_to_model,
+    after_model_callback=log_model_response,
     generate_content_config=types.GenerateContentConfig(
             temperature=0,
         ),
@@ -150,6 +159,8 @@ mandi_critic = Agent(
     If the profit is optimal or no further improvements can be made, use the 'exit_loop' tool.
     Explain your decision and briefly summarize the feedback you have provided.
     """,
+    before_model_callback=log_query_to_model,
+    after_model_callback=log_model_response,
     generate_content_config=types.GenerateContentConfig(
             temperature=0,
         ),
@@ -179,6 +190,8 @@ crop_management_agent = Agent(
     Use the 'Google Search' tool for information if needed.
     Use the 'append_to_state' tool to add your advice to the 'CROP_MANAGEMENT_ADVICE' field.
     """,
+    before_model_callback=log_query_to_model,
+    after_model_callback=log_model_response,
     tools=[google_search],
     generate_content_config=types.GenerateContentConfig(
             temperature=0,
@@ -194,6 +207,8 @@ weather_agent = Agent(
     Use the 'Google Search' tool to get the current and forecasted weather for the LOCATION.
     Analyze how the weather might impact the CROP_DETAILS and suggest necessary actions.
     """,
+    before_model_callback=log_query_to_model,
+    after_model_callback=log_model_response,
     tools=[google_search],
     generate_content_config=types.GenerateContentConfig(
             temperature=0,
