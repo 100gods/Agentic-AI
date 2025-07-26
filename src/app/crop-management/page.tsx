@@ -1,28 +1,34 @@
+
+'use client';
+
 import Header from '@/components/shared/Header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Droplets, Thermometer, Wind, Sprout } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useContext } from 'react';
+import { LanguageContext } from '@/context/LanguageContext';
 
 export default function CropManagementPage() {
+  const { t } = useContext(LanguageContext);
   return (
     <main className="container mx-auto max-w-4xl py-8 px-4">
-      <Header title="Crop Management" />
+      <Header title={t('CropManagement')} />
       <p className="mb-6 text-muted-foreground">
-        Live data from your soil sensors and personalized crop recommendations.
+        {t('cropManagementDesc')}
       </p>
 
       <Card>
         <CardHeader>
-          <CardTitle>Field A-1 Sensor Data</CardTitle>
-          <CardDescription>Real-time soil and environment analysis.</CardDescription>
+          <CardTitle>{t('fieldSensorData')}</CardTitle>
+          <CardDescription>{t('realTimeAnalysis')}</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Droplets className="h-5 w-5" />
-                <span>Soil Moisture</span>
+                <span>{t('soilMoisture')}</span>
               </div>
               <span className="font-bold">65%</span>
             </div>
@@ -33,7 +39,7 @@ export default function CropManagementPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Thermometer className="h-5 w-5" />
-                <span>Soil Temperature</span>
+                <span>{t('soilTemperature')}</span>
               </div>
               <span className="font-bold">28°C</span>
             </div>
@@ -44,7 +50,7 @@ export default function CropManagementPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Wind className="h-5 w-5" />
-                <span>pH Level</span>
+                <span>{t('phLevel')}</span>
               </div>
               <span className="font-bold">6.8</span>
             </div>
@@ -55,9 +61,9 @@ export default function CropManagementPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Sprout className="h-5 w-5" />
-                <span>Nitrogen (N)</span>
+                <span>{t('nitrogen')} (N)</span>
               </div>
-              <span className="font-bold">Good</span>
+              <span className="font-bold">{t('good')}</span>
             </div>
              <Progress value={80} />
           </div>
@@ -68,24 +74,24 @@ export default function CropManagementPage() {
 
       <Card>
           <CardHeader>
-              <CardTitle>Recommendations</CardTitle>
-              <CardDescription>Based on current data analysis.</CardDescription>
+              <CardTitle>{t('recommendations')}</CardTitle>
+              <CardDescription>{t('basedOnAnalysis')}</CardDescription>
           </CardHeader>
           <CardContent>
               <ul className="list-disc list-inside space-y-3">
                   <li className="text-green-700 font-medium">
                       <span className="text-foreground">
-                        <span className="font-semibold">Suitable Crops:</span> Maize and Soybeans are highly suitable for current conditions.
+                        <span className="font-semibold">{t('suitableCrops')}:</span> {t('suitableCropsDesc')}
                       </span>
                   </li>
                   <li className="text-blue-700 font-medium">
                        <span className="text-foreground">
-                        <span className="font-semibold">Watering Schedule:</span> Moisture levels are optimal. Next irrigation cycle recommended in 3 days.
+                        <span className="font-semibold">{t('wateringSchedule')}:</span> {t('wateringScheduleDesc')}
                       </span>
                   </li>
                   <li className="text-yellow-700 font-medium">
                       <span className="text-foreground">
-                        <span className="font-semibold">Fertilizer Alert:</span> Potassium levels are slightly low. Consider applying a potassium-rich fertilizer.
+                        <span className="font-semibold">{t('fertilizerAlert')}:</span> {t('fertilizerAlertDesc')}
                       </span>
                   </li>
               </ul>

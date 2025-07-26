@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Leaf, CloudSun, MessageSquare, Landmark, BookOpen, Droplets, Briefcase, BarChart, ArrowRight, Bell } from 'lucide-react';
@@ -11,67 +11,68 @@ import Orchestrator from './Orchestrator';
 import { Separator } from '@/components/ui/separator';
 import Alerts from '@/components/shared/Alerts';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-
-
-const features = [
-  {
-    title: 'Crop Diagnosis',
-    description: 'Identify crop issues with a photo.',
-    href: '/crop-diagnosis',
-    icon: Leaf,
-  },
-  {
-    title: 'Weather Reports',
-    description: 'Get local weather and forecasts.',
-    href: '/weather',
-    icon: CloudSun,
-  },
-  {
-    title: 'Discussion Forums',
-    description: 'Connect with other farmers.',
-    href: '/forums',
-    icon: MessageSquare,
-  },
-  {
-    title: 'Government Schemes',
-    description: 'Find relevant government support.',
-    href: '/schemes',
-    icon: Landmark,
-  },
-  {
-    title: "Farmer's Training",
-    description: 'Access learning materials.',
-    href: '/training',
-    icon: BookOpen,
-  },
-  {
-    title: 'Crop Management',
-    description: 'Analyze soil data and schedules.',
-    href: '/crop-management',
-    icon: Droplets,
-  },
-  {
-    title: 'Financial Advice',
-    description: 'Get investment and loan advice.',
-    href: '/financial-advice',
-    icon: Briefcase,
-  },
-  {
-    title: 'Market Prices',
-    description: 'View current crop market prices.',
-    href: '/market-prices',
-    icon: BarChart,
-  },
-];
-
-const agentToFeatureMap: Record<string, { title: string; description: string; href: string; }> = features.reduce((acc, feature) => {
-  acc[feature.title] = { title: feature.title, description: feature.description, href: feature.href };
-  return acc;
-}, {} as Record<string, { title: string; description: string; href: string; }>);
+import { LanguageContext, Language, languageOptions } from '@/context/LanguageContext';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 export default function Home() {
-  const [alertsOpen, setAlertsOpen] = useState(false);
+  const { t, language, setLanguage } = useContext(LanguageContext);
+
+  const features = [
+    {
+      title: 'Crop Diagnosis',
+      description: 'Identify crop issues with a photo.',
+      href: '/crop-diagnosis',
+      icon: Leaf,
+    },
+    {
+      title: 'Weather Reports',
+      description: 'Get local weather and forecasts.',
+      href: '/weather',
+      icon: CloudSun,
+    },
+    {
+      title: 'Discussion Forums',
+      description: 'Connect with other farmers.',
+      href: '/forums',
+      icon: MessageSquare,
+    },
+    {
+      title: 'Government Schemes',
+      description: 'Find relevant government support.',
+      href: '/schemes',
+      icon: Landmark,
+    },
+    {
+      title: "Farmer's Training",
+      description: 'Access learning materials.',
+      href: '/training',
+      icon: BookOpen,
+    },
+    {
+      title: 'Crop Management',
+      description: 'Analyze soil data and schedules.',
+      href: '/crop-management',
+      icon: Droplets,
+    },
+    {
+      title: 'Financial Advice',
+      description: 'Get investment and loan advice.',
+      href: '/financial-advice',
+      icon: Briefcase,
+    },
+    {
+      title: 'Market Prices',
+      description: 'View current crop market prices.',
+      href: '/market-prices',
+      icon: BarChart,
+    },
+  ];
+  
+  const agentToFeatureMap: Record<string, { title: string; description: string; href: string; }> = features.reduce((acc, feature) => {
+    acc[feature.title] = { title: feature.title, description: feature.description, href: feature.href };
+    return acc;
+  }, {} as Record<string, { title: string; description: string; href: string; }>);
   
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-background to-muted/50">
@@ -81,20 +82,32 @@ export default function Home() {
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon" className="md:hidden">
                     <Bell />
-                    <span className="sr-only">Open Alerts</span>
+                    <span className="sr-only">{t('openAlerts')}</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">
                 <SheetHeader>
-                  <SheetTitle>Alerts & Reminders</SheetTitle>
+                  <SheetTitle>{t('alertsAndReminders')}</SheetTitle>
                 </SheetHeader>
                 <Alerts />
               </SheetContent>
             </Sheet>
+            <div className="hidden md:block">
+              <Select value={language} onValueChange={(value) => setLanguage(value as Language)}>
+                  <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select language" />
+                  </SelectTrigger>
+                  <SelectContent>
+                      {languageOptions.map(option => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                  </SelectContent>
+              </Select>
+            </div>
         </div>
         <Button asChild>
           <Link href="/profile">
-            <User className="mr-2" /> Login / Create Profile
+            <User className="mr-2" /> {t('loginCreateProfile')}
           </Link>
         </Button>
       </header>
@@ -103,7 +116,7 @@ export default function Home() {
         <main className="flex-1 flex flex-col items-center p-4 sm:p-6 md:p-8 pt-24">
           <div className="text-center mb-12">
             <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-primary">AgriAssist AI</h1>
-            <p className="mt-4 text-lg sm:text-xl text-foreground/80">Your intelligent partner in farming</p>
+            <p className="mt-4 text-lg sm:text-xl text-foreground/80">{t('intelligentPartner')}</p>
           </div>
           
           <Orchestrator agentToFeatureMap={agentToFeatureMap} />
@@ -116,7 +129,7 @@ export default function Home() {
                   </div>
                   <div className="relative flex justify-center">
                       <span className="bg-gradient-to-b from-background to-muted/50 px-4 text-lg font-medium text-muted-foreground">
-                      Or explore features manually
+                      {t('orExploreFeatures')}
                       </span>
                   </div>
               </div>
@@ -127,12 +140,12 @@ export default function Home() {
                   <Card className="h-full w-full hover:border-primary hover:shadow-lg transition-all duration-200 flex flex-col">
                     <CardHeader className="flex-grow">
                       <feature.icon className="h-8 w-8 text-primary mb-4" />
-                      <CardTitle>{feature.title}</CardTitle>
-                      <CardDescription>{feature.description}</CardDescription>
+                      <CardTitle>{t(feature.title.replace(/ /g, ''))}</CardTitle>
+                      <CardDescription>{t(feature.title.replace(/ /g, '') + 'Desc')}</CardDescription>
                     </CardHeader>
                     <div className="p-6 pt-0 mt-auto">
                       <div className="text-sm font-semibold text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        Go to feature <ArrowRight className="h-4 w-4" />
+                        {t('goToFeature')} <ArrowRight className="h-4 w-4" />
                       </div>
                     </div>
                   </Card>
@@ -145,7 +158,7 @@ export default function Home() {
         
         <aside className="hidden md:block w-80 lg:w-96 p-4 pt-24 border-l border-border">
           <div className="sticky top-24">
-            <h2 className="font-headline text-2xl font-bold text-primary mb-4">Alerts & Reminders</h2>
+            <h2 className="font-headline text-2xl font-bold text-primary mb-4">{t('alertsAndReminders')}</h2>
             <Alerts />
           </div>
         </aside>

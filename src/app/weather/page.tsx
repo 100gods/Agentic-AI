@@ -1,54 +1,60 @@
+
+'use client';
+
 import Header from '@/components/shared/Header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Cloud, Sun, CloudRain, Wind } from 'lucide-react';
+import { useContext } from 'react';
+import { LanguageContext } from '@/context/LanguageContext';
 
 export default function WeatherPage() {
+  const { t } = useContext(LanguageContext);
   return (
     <main className="container mx-auto max-w-4xl py-8 px-4">
-      <Header title="Weather Reports" />
+      <Header title={t('WeatherReports')} />
       <Card>
         <CardHeader>
-          <CardTitle>Current Weather: New Delhi</CardTitle>
-          <CardDescription>Last updated: Just now</CardDescription>
+          <CardTitle>{t('currentWeather')}: New Delhi</CardTitle>
+          <CardDescription>{t('lastUpdated')}: {t('justNow')}</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-lg">
             <Sun className="h-12 w-12 text-yellow-500" />
             <div>
               <p className="text-4xl font-bold">34°C</p>
-              <p className="text-muted-foreground">Clear Skies</p>
+              <p className="text-muted-foreground">{t('clearSkies')}</p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Wind className="h-5 w-5 text-muted-foreground" />
-              <span>Wind: 12 km/h</span>
+              <span>{t('wind')}: 12 km/h</span>
             </div>
             <div className="flex items-center gap-2">
               <CloudRain className="h-5 w-5 text-muted-foreground" />
-              <span>Humidity: 45%</span>
+              <span>{t('humidity')}: 45%</span>
             </div>
              <div className="flex items-center gap-2">
               <Cloud className="h-5 w-5 text-muted-foreground" />
-              <span>Precipitation: 5%</span>
+              <span>{t('precipitation')}: 5%</span>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <h2 className="font-headline text-2xl font-bold text-primary mt-10 mb-4">Crop-Specific Forecast</h2>
+      <h2 className="font-headline text-2xl font-bold text-primary mt-10 mb-4">{t('cropSpecificForecast')}</h2>
       <Card>
         <CardHeader>
-            <CardTitle>Advisory for Wheat Crops</CardTitle>
-            <CardDescription>Next 7 Days</CardDescription>
+            <CardTitle>{t('advisoryForWheat')}</CardTitle>
+            <CardDescription>{t('next7Days')}</CardDescription>
         </CardHeader>
         <CardContent>
-            <p className="text-destructive font-medium mb-4">Warning: High temperatures expected. Risk of heat stress.</p>
+            <p className="text-destructive font-medium mb-4">{t('warning')}: {t('heatStressRisk')}</p>
             <ul className="list-disc list-inside space-y-2 text-foreground/90">
-                <li>Ensure adequate irrigation, especially during the afternoon.</li>
-                <li>Monitor for signs of wilting or leaf curling.</li>
-                <li>Postpone pesticide spraying to cooler parts of the day to avoid leaf burn.</li>
-                <li>No significant rainfall expected; plan irrigation schedules accordingly.</li>
+                <li>{t('advisory1')}</li>
+                <li>{t('advisory2')}</li>
+                <li>{t('advisory3')}</li>
+                <li>{t('advisory4')}</li>
             </ul>
         </CardContent>
       </Card>

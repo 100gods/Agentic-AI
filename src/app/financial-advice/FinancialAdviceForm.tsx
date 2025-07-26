@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -15,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { getFinancialAdvice, type GetFinancialAdviceOutput } from '@/ai/flows/financial-advice';
+import { LanguageContext } from '@/context/LanguageContext';
 
 const formSchema = z.object({
   query: z.string().min(10, {
@@ -33,6 +35,7 @@ export default function FinancialAdviceForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<GetFinancialAdviceOutput | null>(null);
   const { toast } = useToast();
+  const { t } = useContext(LanguageContext);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -66,8 +69,8 @@ export default function FinancialAdviceForm() {
       console.error('Advice generation failed:', error);
       toast({
         variant: 'destructive',
-        title: 'An error occurred',
-        description: 'Failed to get financial advice. Please try again.',
+        title: t('errorOccurred'),
+        description: t('failedToGetAdvice'),
       });
     } finally {
       setIsLoading(false);
@@ -85,10 +88,10 @@ export default function FinancialAdviceForm() {
                 name="query"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Your Financial Question</FormLabel>
+                    <FormLabel>{t('yourFinancialQuestion')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="e.g., What's the best way to get a loan for a new tractor?"
+                        placeholder={t('financialQuestionPlaceholder')}
                         rows={4}
                         {...field}
                       />
@@ -104,7 +107,7 @@ export default function FinancialAdviceForm() {
                   name="location"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Location</FormLabel>
+                      <FormLabel>{t('location')}</FormLabel>
                       <FormControl>
                         <Input placeholder="e.g., Punjab, India" {...field} />
                       </FormControl>
@@ -117,16 +120,16 @@ export default function FinancialAdviceForm() {
                   name="experience"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Farming Experience</FormLabel>
+                      <FormLabel>{t('farmingExperience')}</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger><SelectValue /></SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="0-2 years">0-2 years</SelectItem>
-                          <SelectItem value="2-5 years">2-5 years</SelectItem>
-                          <SelectItem value="5-10 years">5-10 years</SelectItem>
-                          <SelectItem value="10+ years">10+ years</SelectItem>
+                          <SelectItem value="0-2 years">0-2 {t('years')}</SelectItem>
+                          <SelectItem value="2-5 years">2-5 {t('years')}</SelectItem>
+                          <SelectItem value="5-10 years">5-10 {t('years')}</SelectItem>
+                          <SelectItem value="10+ years">10+ {t('years')}</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -138,16 +141,16 @@ export default function FinancialAdviceForm() {
                   name="farmingType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Type of Farming</FormLabel>
+                      <FormLabel>{t('typeOfFarming')}</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger><SelectValue /></SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Subsistence">Subsistence</SelectItem>
-                          <SelectItem value="Commercial">Commercial</SelectItem>
-                           <SelectItem value="Organic">Organic</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
+                          <SelectItem value="Subsistence">{t('subsistence')}</SelectItem>
+                          <SelectItem value="Commercial">{t('commercial')}</SelectItem>
+                           <SelectItem value="Organic">{t('organic')}</SelectItem>
+                          <SelectItem value="Other">{t('other')}</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -159,15 +162,15 @@ export default function FinancialAdviceForm() {
                   name="landSize"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Land Size</FormLabel>
+                      <FormLabel>{t('landSize')}</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger><SelectValue /></SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                           <SelectItem value="Small (1-5 acres)">Small (1-5 acres)</SelectItem>
-                           <SelectItem value="Medium (5-25 acres)">Medium (5-25 acres)</SelectItem>
-                           <SelectItem value="Large (25+ acres)">Large (25+ acres)</SelectItem>
+                           <SelectItem value="Small (1-5 acres)">{t('smallAcres')}</SelectItem>
+                           <SelectItem value="Medium (5-25 acres)">{t('mediumAcres')}</SelectItem>
+                           <SelectItem value="Large (25+ acres)">{t('largeAcres')}</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -181,7 +184,7 @@ export default function FinancialAdviceForm() {
                 render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                         <div className="space-y-0.5">
-                            <FormLabel>Interested in Investments?</FormLabel>
+                            <FormLabel>{t('interestedInInvestments')}</FormLabel>
                         </div>
                         <FormControl>
                             <Switch
@@ -197,10 +200,10 @@ export default function FinancialAdviceForm() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Getting Advice...
+                    {t('gettingAdvice')}...
                   </>
                 ) : (
-                  'Get Financial Advice'
+                  t('getFinancialAdvice')
                 )}
               </Button>
             </form>
@@ -211,8 +214,8 @@ export default function FinancialAdviceForm() {
       {isLoading && (
         <Card className="mt-8 animate-pulse">
             <CardHeader>
-                <CardTitle>Generating Advice...</CardTitle>
-                <CardDescription>Our AI is crafting financial guidance for you.</CardDescription>
+                <CardTitle>{t('generatingAdvice')}</CardTitle>
+                <CardDescription>{t('generatingAdviceDesc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="h-4 bg-muted rounded w-1/4"></div>
@@ -225,18 +228,18 @@ export default function FinancialAdviceForm() {
       {result && (
         <Card className="mt-8 animate-in fade-in">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Sparkles className="text-primary"/> AI Financial Advice</CardTitle>
+            <CardTitle className="flex items-center gap-2"><Sparkles className="text-primary"/> {t('aiFinancialAdvice')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <h3 className="font-headline text-lg font-semibold text-primary">Advice</h3>
+              <h3 className="font-headline text-lg font-semibold text-primary">{t('advice')}</h3>
               <p className="mt-2 text-foreground/90 whitespace-pre-wrap">{result.advice}</p>
             </div>
              {result.opportunities && result.opportunities.length > 0 && (
               <div>
                 <h3 className="font-headline text-lg font-semibold text-primary flex items-center gap-2">
                     <Briefcase />
-                    Opportunities
+                    {t('opportunities')}
                 </h3>
                 <div className="mt-2 space-y-4">
                   {result.opportunities.map((opp, index) => (

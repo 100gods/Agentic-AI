@@ -1,8 +1,12 @@
+
+'use client';
 import Header from '@/components/shared/Header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUp, ArrowDown } from 'lucide-react';
+import { useContext } from 'react';
+import { LanguageContext } from '@/context/LanguageContext';
 
 const cropPrices = [
   { crop: 'Wheat', price: '₹2,125', change: '+2.5%', trend: 'up' },
@@ -14,25 +18,26 @@ const cropPrices = [
 ];
 
 export default function MarketPricesPage() {
+  const { t } = useContext(LanguageContext);
   return (
     <main className="container mx-auto max-w-4xl py-8 px-4">
-      <Header title="Market Prices" />
+      <Header title={t('MarketPrices')} />
       <p className="mb-6 text-muted-foreground">
-        View the latest market prices for key crops. Data is indicative.
+        {t('marketPricesDesc')}
       </p>
 
       <Card>
         <CardHeader>
-          <CardTitle>Crop Prices (per quintal)</CardTitle>
-          <CardDescription>All India Average Market Price</CardDescription>
+          <CardTitle>{t('cropPrices')}</CardTitle>
+          <CardDescription>{t('allIndiaAverage')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Crop</TableHead>
-                <TableHead className="text-right">Price</TableHead>
-                <TableHead className="text-right">Change (24h)</TableHead>
+                <TableHead>{t('crop')}</TableHead>
+                <TableHead className="text-right">{t('price')}</TableHead>
+                <TableHead className="text-right">{t('change24h')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

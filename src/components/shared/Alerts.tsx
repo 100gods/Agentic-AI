@@ -3,43 +3,47 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Bell, Calendar, CloudDrizzle, Tractor, Wheat } from "lucide-react"
-
-const alerts = [
-    {
-      id: 1,
-      icon: CloudDrizzle,
-      title: "Time for Drip Irrigation",
-      description: "Soil moisture is low for Field B-2. Start irrigation cycle.",
-      time: "Now",
-      color: "text-blue-500",
-    },
-    {
-      id: 2,
-      icon: Calendar,
-      title: "PM-KISAN Deadline",
-      description: "Last day to apply for the PM-KISAN scheme is in 3 days.",
-      time: "in 3 days",
-      color: "text-orange-500",
-    },
-    {
-      id: 3,
-      icon: Wheat,
-      title: "Harvesting Time",
-      description: "Your wheat crop is ready for harvest next week.",
-      time: "in 7 days",
-      color: "text-yellow-500",
-    },
-    {
-      id: 4,
-      icon: Tractor,
-      title: "Tractor Maintenance Due",
-      description: "Scheduled maintenance for your tractor is this weekend.",
-      time: "in 5 days",
-      color: "text-gray-500",
-    },
-];
+import { useContext } from "react";
+import { LanguageContext } from "@/context/LanguageContext";
 
 export default function Alerts() {
+    const { t } = useContext(LanguageContext);
+
+    const alerts = [
+        {
+          id: 1,
+          icon: CloudDrizzle,
+          title: t('alert1Title'),
+          description: t('alert1Desc'),
+          time: t('now'),
+          color: "text-blue-500",
+        },
+        {
+          id: 2,
+          icon: Calendar,
+          title: t('alert2Title'),
+          description: t('alert2Desc'),
+          time: t('inDays', { count: 3 }),
+          color: "text-orange-500",
+        },
+        {
+          id: 3,
+          icon: Wheat,
+          title: t('alert3Title'),
+          description: t('alert3Desc'),
+          time: t('inDays', { count: 7 }),
+          color: "text-yellow-500",
+        },
+        {
+          id: 4,
+          icon: Tractor,
+          title: t('alert4Title'),
+          description: t('alert4Desc'),
+          time: t('inDays', { count: 5 }),
+          color: "text-gray-500",
+        },
+    ];
+
     return (
         <div className="space-y-4 py-4">
             {alerts.map((alert) => (

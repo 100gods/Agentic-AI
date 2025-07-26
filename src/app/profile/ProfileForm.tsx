@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -12,6 +13,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { useContext } from 'react';
+import { LanguageContext } from '@/context/LanguageContext';
 
 const profileSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
@@ -26,6 +29,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function ProfileForm() {
     const { toast } = useToast();
+    const { t } = useContext(LanguageContext);
 
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
@@ -41,15 +45,15 @@ export default function ProfileForm() {
     const onSubmit = (data: ProfileFormValues) => {
         console.log(data);
         toast({
-            title: "Profile Saved!",
-            description: "Your profile information has been updated.",
+            title: t('profileSaved'),
+            description: t('profileSavedDesc'),
         });
     };
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Farmer Profile</CardTitle>
+                <CardTitle>{t('farmerProfile')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
@@ -60,7 +64,7 @@ export default function ProfileForm() {
                                 name="fullName"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Full Name</FormLabel>
+                                        <FormLabel>{t('fullName')}</FormLabel>
                                         <FormControl>
                                             <Input placeholder="e.g., Ramesh Kumar" {...field} />
                                         </FormControl>
@@ -73,7 +77,7 @@ export default function ProfileForm() {
                                 name="location"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Location (State, Country)</FormLabel>
+                                        <FormLabel>{t('locationStateCountry')}</FormLabel>
                                         <FormControl>
                                             <Input placeholder="e.g., Punjab, India" {...field} />
                                         </FormControl>
@@ -86,16 +90,16 @@ export default function ProfileForm() {
                                 name="experience"
                                 render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Farming Experience</FormLabel>
+                                    <FormLabel>{t('farmingExperience')}</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
-                                        <SelectTrigger><SelectValue placeholder="Select experience level" /></SelectTrigger>
+                                        <SelectTrigger><SelectValue placeholder={t('selectExperience')} /></SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="0-2 years">0-2 years</SelectItem>
-                                        <SelectItem value="2-5 years">2-5 years</SelectItem>
-                                        <SelectItem value="5-10 years">5-10 years</SelectItem>
-                                        <SelectItem value="10+ years">10+ years</SelectItem>
+                                        <SelectItem value="0-2 years">0-2 {t('years')}</SelectItem>
+                                        <SelectItem value="2-5 years">2-5 {t('years')}</SelectItem>
+                                        <SelectItem value="5-10 years">5-10 {t('years')}</SelectItem>
+                                        <SelectItem value="10+ years">10+ {t('years')}</SelectItem>
                                     </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -107,17 +111,17 @@ export default function ProfileForm() {
                                 name="farmingType"
                                 render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Type of Farming</FormLabel>
+                                    <FormLabel>{t('typeOfFarming')}</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
-                                        <SelectTrigger><SelectValue placeholder="Select farming type" /></SelectTrigger>
+                                        <SelectTrigger><SelectValue placeholder={t('selectFarmingType')} /></SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="Subsistence">Subsistence</SelectItem>
-                                        <SelectItem value="Commercial">Commercial</SelectItem>
-                                        <SelectItem value="Organic">Organic</SelectItem>
-                                        <SelectItem value="Livestock">Livestock</SelectItem>
-                                        <SelectItem value="Other">Other</SelectItem>
+                                        <SelectItem value="Subsistence">{t('subsistence')}</SelectItem>
+                                        <SelectItem value="Commercial">{t('commercial')}</SelectItem>
+                                        <SelectItem value="Organic">{t('organic')}</SelectItem>
+                                        <SelectItem value="Livestock">{t('livestock')}</SelectItem>
+                                        <SelectItem value="Other">{t('other')}</SelectItem>
                                     </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -129,16 +133,16 @@ export default function ProfileForm() {
                                 name="landSize"
                                 render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>How much land do you farm?</FormLabel>
+                                    <FormLabel>{t('howMuchLand')}</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
-                                        <SelectTrigger><SelectValue placeholder="Select land size" /></SelectTrigger>
+                                        <SelectTrigger><SelectValue placeholder={t('selectLandSize')} /></SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="No land">No land</SelectItem>
-                                        <SelectItem value="Small (1-5 acres)">Small (1-5 acres)</SelectItem>
-                                        <SelectItem value="Medium (5-25 acres)">Medium (5-25 acres)</SelectItem>
-                                        <SelectItem value="Large (25+ acres)">Large (25+ acres)</SelectItem>
+                                        <SelectItem value="No land">{t('noLand')}</SelectItem>
+                                        <SelectItem value="Small (1-5 acres)">{t('smallAcres')}</SelectItem>
+                                        <SelectItem value="Medium (5-25 acres)">{t('mediumAcres')}</SelectItem>
+                                        <SelectItem value="Large (25+ acres)">{t('largeAcres')}</SelectItem>
                                     </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -152,7 +156,7 @@ export default function ProfileForm() {
                             render={({ field }) => (
                                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                                     <div className="space-y-0.5">
-                                        <FormLabel>Are you looking for investment?</FormLabel>
+                                        <FormLabel>{t('lookingForInvestment')}</FormLabel>
                                     </div>
                                     <FormControl>
                                         <Switch
@@ -165,7 +169,7 @@ export default function ProfileForm() {
                         />
                         <Button type="submit" disabled={isLoading} className="w-full">
                             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Save Profile
+                            {t('saveProfile')}
                         </Button>
                     </form>
                 </Form>

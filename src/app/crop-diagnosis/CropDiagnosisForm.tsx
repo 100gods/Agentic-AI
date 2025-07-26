@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,6 +32,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { LanguageContext, languageOptions } from '@/context/LanguageContext';
 
 const formSchema = z.object({
   description: z.string().min(10, {
@@ -51,36 +53,6 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const experts = [
-    {
-      id: '1',
-      name: 'Dr. Anjali Sharma',
-      specialty: 'Plant Pathology',
-      rate: '₹1500/hr',
-      avatar: 'https://placehold.co/100x100',
-      dataAiHint: 'woman portrait',
-      slots: ['10:00 AM', '11:00 AM', '02:00 PM'],
-    },
-    {
-      id: '2',
-      name: 'Mr. Vikram Singh',
-      specialty: 'Entomology (Pest Control)',
-      rate: '₹1200/hr',
-      avatar: 'https://placehold.co/100x100',
-      dataAiHint: 'man portrait',
-      slots: ['09:00 AM', '12:00 PM', '04:00 PM'],
-    },
-];
-
-type Expert = typeof experts[0];
-
-const languageToCode: Record<string, string> = {
-  English: 'en-US',
-  Hindi: 'hi-IN',
-  Spanish: 'es-ES',
-  Marathi: 'mr-IN',
-};
-
 export default function CropDiagnosisForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DiagnoseCropOutput | null>(null);
@@ -92,10 +64,34 @@ export default function CropDiagnosisForm() {
   const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
+  const [selectedExpert, setSelectedExpert] = useState<any | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isConfirming, setIsConfirming] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const { t, language, languageCode, setLanguage } = useContext(LanguageContext);
+
+  const experts = [
+    {
+      id: '1',
+      name: 'Dr. Anjali Sharma',
+      specialty: t('plantPathology'),
+      rate: '₹1500/hr',
+      avatar: 'https://placehold.co/100x100',
+      dataAiHint: 'woman portrait',
+      slots: ['10:00 AM', '11:00 AM', '02:00 PM'],
+    },
+    {
+      id: '2',
+      name: 'Mr. Vikram Singh',
+      specialty: t('entomology'),
+      rate: '₹1200/hr',
+      avatar: 'https://placehold.co/100x100',
+      dataAiHint: 'man portrait',
+      slots: ['09:00 AM', '12:00 PM', '04:00 PM'],
+    },
+];
+
+type Expert = typeof experts[0];
   
   useEffect(() => {
     audioRef.current = new Audio();
@@ -105,11 +101,15 @@ export default function CropDiagnosisForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       description: '',
-      language: 'English',
+      language: language,
     },
   });
   
   const selectedLanguage = form.watch('language');
+
+  useEffect(() => {
+    form.setValue('language', language);
+  }, [language, form]);
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -117,7 +117,7 @@ export default function CropDiagnosisForm() {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = false;
       recognitionRef.current.interimResults = false;
-      recognitionRef.current.lang = languageToCode[selectedLanguage] || 'en-US';
+      recognitionRef.current.lang = languageCode;
 
       recognitionRef.current.onresult = (event: any) => {
           const transcript = event.results[0][0].transcript;
@@ -130,8 +130,8 @@ export default function CropDiagnosisForm() {
           console.error('Speech recognition error', event.error);
           toast({
               variant: 'destructive',
-              title: 'Voice Recognition Error',
-              description: `An error occurred: ${event.error}`,
+              title: t('voiceRecognitionError'),
+              description: t('voiceRecognitionErrorDesc', { error: event.error }),
           });
         }
         setIsListening(false);
@@ -142,14 +142,14 @@ export default function CropDiagnosisForm() {
       };
 
     }
-  }, [selectedLanguage, toast, form]);
+  }, [languageCode, toast, form, t]);
 
   const handleVoiceInput = () => {
     if (!recognitionRef.current) {
       toast({
           variant: 'destructive',
-          title: 'Not Supported',
-          description: 'Voice recognition is not supported in your browser.',
+          title: t('notSupported'),
+          description: t('voiceRecognitionNotSupported'),
       });
       return;
     }
@@ -158,7 +158,7 @@ export default function CropDiagnosisForm() {
       recognitionRef.current.stop();
     } else {
       form.setValue('description', '');
-      recognitionRef.current.lang = languageToCode[selectedLanguage] || 'en-US';
+      recognitionRef.current.lang = languageCode;
       recognitionRef.current.start();
       setIsListening(true);
     }
@@ -206,7 +206,7 @@ export default function CropDiagnosisForm() {
         });
         setResult(response);
 
-        const textForTTS = `Diagnosis: ${response.diagnosis}. Solutions: ${response.solutions}`;
+        const textForTTS = `${t('diagnosis')}: ${response.diagnosis}. ${t('suggestedSolutions')}: ${response.solutions}`;
         const audioResponse = await textToSpeech(textForTTS);
         setAudioResult(audioResponse);
 
@@ -214,8 +214,8 @@ export default function CropDiagnosisForm() {
         console.error('Diagnosis failed:', error);
         toast({
           variant: 'destructive',
-          title: 'An error occurred',
-          description: 'Failed to get a diagnosis. Please try again.',
+          title: t('errorOccurred'),
+          description: t('failedToGetDiagnosis'),
         });
       } finally {
         setIsLoading(false);
@@ -225,8 +225,8 @@ export default function CropDiagnosisForm() {
       console.error('Error reading file:', error);
       toast({
         variant: 'destructive',
-        title: 'File Read Error',
-        description: 'Could not read the selected image file.',
+        title: t('fileReadError'),
+        description: t('couldNotReadFile'),
       });
       setIsLoading(false);
     };
@@ -242,8 +242,8 @@ export default function CropDiagnosisForm() {
     setBookingConfirmed(true);
     setIsConfirming(false);
     toast({
-        title: "Appointment Booked!",
-        description: `Your consultation with ${selectedExpert?.name} at ${selectedSlot} is confirmed.`,
+        title: t('appointmentBooked'),
+        description: t('appointmentBookedDesc', { name: selectedExpert?.name, slot: selectedSlot }),
     });
   };
   
@@ -278,7 +278,7 @@ export default function CropDiagnosisForm() {
                 name="photo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Crop Photo</FormLabel>
+                    <FormLabel>{t('cropPhoto')}</FormLabel>
                     <FormControl>
                       <Input
                         type="file"
@@ -304,18 +304,21 @@ export default function CropDiagnosisForm() {
                 name="language"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Language</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormLabel>{t('language')}</FormLabel>
+                    <Select onValueChange={(value) => {
+                      field.onChange(value);
+                      setLanguage(value as any);
+                    }} 
+                    defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select language for diagnosis" />
+                          <SelectValue placeholder={t('selectLanguage')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="English">English</SelectItem>
-                        <SelectItem value="Hindi">Hindi (हिन्दी)</SelectItem>
-                        <SelectItem value="Spanish">Spanish (Español)</SelectItem>
-                        <SelectItem value="Marathi">Marathi (मराठी)</SelectItem>
+                        {languageOptions.map(option => (
+                           <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -327,11 +330,11 @@ export default function CropDiagnosisForm() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description of Issue</FormLabel>
+                    <FormLabel>{t('descriptionOfIssue')}</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Textarea
-                          placeholder={isListening ? "Listening..." : "e.g., The leaves are turning yellow with brown spots..."}
+                          placeholder={isListening ? t('listening') : t('descriptionPlaceholder')}
                           rows={5}
                           {...field}
                           disabled={isListening}
@@ -343,7 +346,7 @@ export default function CropDiagnosisForm() {
                             onClick={handleVoiceInput}
                             disabled={isLoading}
                             className="absolute bottom-2 right-2"
-                            aria-label={isListening ? 'Stop listening' : 'Start listening'}
+                            aria-label={isListening ? t('stopListening') : t('startListening')}
                           >
                             {isListening ? (
                                 <StopCircle className="h-5 w-5 text-destructive animate-pulse" />
@@ -362,10 +365,10 @@ export default function CropDiagnosisForm() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Analyzing...
+                    {t('analyzing')}...
                   </>
                 ) : (
-                  'Get Diagnosis'
+                  t('getDiagnosis')
                 )}
               </Button>
             </form>
@@ -376,8 +379,8 @@ export default function CropDiagnosisForm() {
       {isLoading && (
         <Card className="mt-8 animate-pulse">
             <CardHeader>
-                <CardTitle>Generating Diagnosis...</CardTitle>
-                <CardDescription>Our AI is analyzing your crop. Please wait a moment.</CardDescription>
+                <CardTitle>{t('generatingDiagnosis')}</CardTitle>
+                <CardDescription>{t('generatingDiagnosisDesc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="h-4 bg-muted rounded w-1/4"></div>
@@ -395,11 +398,11 @@ export default function CropDiagnosisForm() {
           <CardHeader>
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle>Analysis Result</CardTitle>
-                <CardDescription>Here is the diagnosis and suggested solutions from our AI expert.</CardDescription>
+                <CardTitle>{t('analysisResult')}</CardTitle>
+                <CardDescription>{t('analysisResultDesc')}</CardDescription>
               </div>
               {audioResult && (
-                <Button variant="outline" size="icon" onClick={playAudioResult} aria-label="Play diagnosis">
+                <Button variant="outline" size="icon" onClick={playAudioResult} aria-label={t('playDiagnosis')}>
                   <Volume2 className="h-5 w-5" />
                 </Button>
               )}
@@ -407,11 +410,11 @@ export default function CropDiagnosisForm() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <h3 className="font-headline text-lg font-semibold text-primary">Diagnosis</h3>
+              <h3 className="font-headline text-lg font-semibold text-primary">{t('diagnosis')}</h3>
               <p className="mt-2 text-foreground/90 whitespace-pre-wrap">{result.diagnosis}</p>
             </div>
             <div>
-              <h3 className="font-headline text-lg font-semibold text-primary">Suggested Solutions</h3>
+              <h3 className="font-headline text-lg font-semibold text-primary">{t('suggestedSolutions')}</h3>
               <p className="mt-2 text-foreground/90 whitespace-pre-wrap">{result.solutions}</p>
             </div>
           </CardContent>
@@ -419,8 +422,8 @@ export default function CropDiagnosisForm() {
             <>
                 <Separator />
                 <CardContent className="p-0 pt-6">
-                    <h3 className="font-headline text-lg font-semibold text-destructive">Expert Consultation Recommended</h3>
-                    <p className="text-muted-foreground mt-1">Our analysis indicates a disease. You can book a video consultation with an expert for further guidance.</p>
+                    <h3 className="font-headline text-lg font-semibold text-destructive">{t('expertConsultationRec')}</h3>
+                    <p className="text-muted-foreground mt-1">{t('expertConsultationRecDesc')}</p>
                     <div className="mt-4 space-y-4">
                         {experts.map((expert) => (
                             <Card key={expert.id} className="bg-card/50">
@@ -437,7 +440,7 @@ export default function CropDiagnosisForm() {
                                 </CardHeader>
                                 <CardFooter>
                                     <div className="flex gap-2 flex-wrap">
-                                        <span className="text-sm font-medium self-center mr-2">Available Slots:</span>
+                                        <span className="text-sm font-medium self-center mr-2">{t('availableSlots')}:</span>
                                         {expert.slots.map(slot => (
                                             <Button key={slot} variant="outline" size="sm" onClick={() => handleBookSlot(expert, slot)}>
                                                 <Clock className="mr-2 h-4 w-4" /> {slot}
@@ -457,20 +460,20 @@ export default function CropDiagnosisForm() {
                 <CardContent className="p-0 mt-6">
                     <Card className="bg-green-50 border-green-200">
                         <CardHeader>
-                            <CardTitle className="text-green-800">Appointment Confirmed!</CardTitle>
+                            <CardTitle className="text-green-800">{t('appointmentConfirmed')}</CardTitle>
                             <CardDescription className="text-green-700">
-                                Your video consultation with {selectedExpert.name} is scheduled for {selectedSlot}.
+                                {t('appointmentConfirmedDesc', { name: selectedExpert.name, slot: selectedSlot })}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="flex flex-col sm:flex-row gap-4">
                             <Button asChild>
                                 <a href="#" target="_blank" rel="noopener noreferrer">
-                                    <Video className="mr-2 h-4 w-4" /> Join Meeting
+                                    <Video className="mr-2 h-4 w-4" /> {t('joinMeeting')}
                                 </a>
                             </Button>
                             <Button variant="outline" asChild>
                                 <a href={generateCalendarLink()} target="_blank" rel="noopener noreferrer">
-                                    <Calendar className="mr-2 h-4 w-4" /> Add to Calendar
+                                    <Calendar className="mr-2 h-4 w-4" /> {t('addToCalendar')}
                                 </a>
                             </Button>
                         </CardContent>
@@ -484,19 +487,17 @@ export default function CropDiagnosisForm() {
     <AlertDialog open={isConfirming} onOpenChange={setIsConfirming}>
         <AlertDialogContent>
             <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Your Appointment</AlertDialogTitle>
+            <AlertDialogTitle>{t('confirmAppointment')}</AlertDialogTitle>
             <AlertDialogDescription>
-                Are you sure you want to book a consultation with <span className="font-bold">{selectedExpert?.name}</span> at <span className="font-bold">{selectedSlot}</span> for a fee of {selectedExpert?.rate}?
+                {t('confirmAppointmentDesc', { name: selectedExpert?.name, slot: selectedSlot, rate: selectedExpert?.rate})}
             </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmBooking}>Confirm Booking</AlertDialogAction>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmBooking}>{t('confirmBooking')}</AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
     </AlertDialog>
     </>
   );
 }
-
-    

@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useRef, useEffect, createElement } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Loader2, Mic, StopCircle, Leaf, CloudSun, MessageSquare, Landmark, BookOpen, Droplets, Briefcase, BarChart } from 'lucide-react';
 import { orchestrate } from '@/ai/flows/orchestrator';
@@ -11,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { LanguageContext } from '@/context/LanguageContext';
 
 interface OrchestratorProps {
     agentToFeatureMap: Record<string, {
@@ -41,6 +43,8 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
     const { toast } = useToast();
     const recognitionRef = useRef<any>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const { t, languageCode } = useContext(LanguageContext);
+
 
     useEffect(() => {
         audioRef.current = new Audio();
@@ -52,7 +56,7 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
             recognitionRef.current = new SpeechRecognition();
             recognitionRef.current.continuous = false;
             recognitionRef.current.interimResults = false;
-            recognitionRef.current.lang = 'en-US';
+            recognitionRef.current.lang = languageCode;
 
             recognitionRef.current.onresult = (event: any) => {
                 const transcript = event.results[0][0].transcript;
@@ -69,8 +73,8 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
                     console.error('Speech recognition error', event.error);
                     toast({
                         variant: 'destructive',
-                        title: 'Voice Recognition Error',
-                        description: `An error occurred: ${event.error}`,
+                        title: t('voiceRecognitionError'),
+                        description: t('voiceRecognitionErrorDesc', { error: event.error }),
                     });
                 }
                 setIsListening(false);
@@ -80,14 +84,14 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
                 setIsListening(false);
             };
         }
-    }, [toast]);
+    }, [toast, t, languageCode]);
 
     const handleVoiceInput = () => {
         if (!recognitionRef.current) {
             toast({
                 variant: 'destructive',
-                title: 'Not Supported',
-                description: 'Voice recognition is not supported in your browser.',
+                title: t('notSupported'),
+                description: t('voiceRecognitionNotSupported'),
             });
             return;
         }
@@ -98,6 +102,7 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
             setQuery('');
             setResult(null);
             setAudioResult(null);
+            recognitionRef.current.lang = languageCode;
             recognitionRef.current.start();
             setIsListening(true);
         }
@@ -114,7 +119,7 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
             const response = await orchestrate({ query: currentQuery });
             setResult(response);
             
-            const responseText = response.clarifyingQuestion || `Navigating to the ${response.agent} page.`;
+            const responseText = response.clarifyingQuestion || t('navigatingTo', { page: t(response.agent.replace(/ /g, '')) });
             const audioResponse = await textToSpeech(responseText);
             setAudioResult(audioResponse);
 
@@ -130,8 +135,8 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
             console.error('Orchestration failed:', error);
             toast({
                 variant: 'destructive',
-                title: 'An error occurred',
-                description: 'Failed to process your request. Please try again.',
+                title: t('errorOccurred'),
+                description: t('failedToProcessRequest'),
             });
         } finally {
             setIsProcessing(false);
@@ -152,7 +157,7 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
                 <form onSubmit={handleSubmit} className="flex items-center gap-2">
                     <Input
                         type="text"
-                        placeholder={isListening ? 'Listening...' : "How can I help you today?"}
+                        placeholder={isListening ? t('listening') : t('howCanIHelp')}
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         disabled={isProcessing || isListening}
@@ -164,7 +169,7 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
                         size="icon"
                         onClick={handleVoiceInput}
                         disabled={isProcessing}
-                        aria-label={isListening ? 'Stop listening' : 'Start listening'}
+                        aria-label={isListening ? t('stopListening') : t('startListening')}
                     >
                         {isListening ? (
                             <StopCircle className="h-5 w-5 text-destructive animate-pulse" />
@@ -183,7 +188,7 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
 
                 {isProcessing && (
                     <div className="mt-4 text-center text-muted-foreground animate-pulse">
-                        Figuring out the best way to help...
+                        {t('figuringOutHelp')}
                     </div>
                 )}
 
@@ -192,16 +197,16 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
                         {selectedFeature && FeatureIcon ? (
                              <Alert>
                              <FeatureIcon className="h-4 w-4" />
-                             <AlertTitle>Suggestion: {selectedFeature.title}</AlertTitle>
+                             <AlertTitle>{t('suggestion')}: {t(selectedFeature.title.replace(/ /g, ''))}</AlertTitle>
                              <AlertDescription>
-                               {result.clarifyingQuestion || `Redirecting you to the ${selectedFeature.title} page...`}
+                               {result.clarifyingQuestion || t('redirectingTo', { page: t(selectedFeature.title.replace(/ /g, '')) })}
                              </AlertDescription>
                            </Alert>
                         ) : (
                             <Alert variant="destructive">
-                                <AlertTitle>Request Unclear</AlertTitle>
+                                <AlertTitle>{t('requestUnclear')}</AlertTitle>
                                 <AlertDescription>
-                                    I'm not sure how to help with that. Please try rephrasing your request, or select a feature from the main menu.
+                                    {t('requestUnclearDesc')}
                                 </AlertDescription>
                             </Alert>
                         )}

@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -34,7 +35,8 @@ Analyze the user's query: "{{{query}}}"
 
 Based on the query, select the most appropriate agent. If the request is ambiguous or could be handled by multiple agents, select the most likely one. If the request is not related to any of the agents, select 'Unknown'.
 
-You can also ask a clarifying question to the user to get more information. For example, if the user says "I need help with my finances", you could ask "What specific financial question do you have?".
+If the query requires more information, you can ask a clarifying question to the user. For example, if the user says "I need help with my finances", you could ask "What specific financial question do you have?".
+If the query is clear, do not ask a clarifying question.
 `,
 });
 

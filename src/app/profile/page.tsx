@@ -1,12 +1,17 @@
+
+'use client';
 import Header from '@/components/shared/Header';
 import ProfileForm from './ProfileForm';
+import { useContext } from 'react';
+import { LanguageContext } from '@/context/LanguageContext';
 
 export default function ProfilePage() {
+  const { t } = useContext(LanguageContext);
   return (
     <main className="container mx-auto max-w-3xl py-8 px-4">
-      <Header title="Your Profile" hideLogin={true} />
+      <Header title={t('yourProfile')} hideLogin={true} />
       <p className="mb-6 text-muted-foreground">
-        Create or update your profile. This information helps us personalize your experience.
+        {t('profileDesc')}
       </p>
       <ProfileForm />
     </main>

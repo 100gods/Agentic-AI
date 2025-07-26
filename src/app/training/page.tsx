@@ -1,41 +1,48 @@
+
+'use client';
+
 import Header from '@/components/shared/Header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
-
-const trainingOpportunities = [
-  {
-    title: 'Advanced Organic Farming Techniques',
-    provider: 'National Centre of Organic Farming',
-    level: 'Advanced',
-    mode: 'Online',
-    imageUrl: 'https://placehold.co/600x400',
-    dataAiHint: 'organic farming'
-  },
-  {
-    title: 'Workshop on Soil Health Management',
-    provider: 'Indian Agricultural Research Institute',
-    level: 'Intermediate',
-    mode: 'In-Person',
-    imageUrl: 'https://placehold.co/600x400',
-    dataAiHint: 'soil health'
-  },
-  {
-    title: 'Introduction to Greenhouse Cultivation',
-    provider: 'State Horticulture Mission',
-    level: 'Beginner',
-    mode: 'Online',
-    imageUrl: 'https://placehold.co/600x400',
-    dataAiHint: 'greenhouse cultivation'
-  },
-];
+import { useContext } from 'react';
+import { LanguageContext } from '@/context/LanguageContext';
 
 export default function TrainingPage() {
+  const { t } = useContext(LanguageContext);
+
+  const trainingOpportunities = [
+    {
+      title: 'Advanced Organic Farming Techniques',
+      provider: 'National Centre of Organic Farming',
+      level: t('advanced'),
+      mode: 'Online',
+      imageUrl: 'https://placehold.co/600x400',
+      dataAiHint: 'organic farming'
+    },
+    {
+      title: 'Workshop on Soil Health Management',
+      provider: 'Indian Agricultural Research Institute',
+      level: t('intermediate'),
+      mode: 'In-Person',
+      imageUrl: 'https://placehold.co/600x400',
+      dataAiHint: 'soil health'
+    },
+    {
+      title: 'Introduction to Greenhouse Cultivation',
+      provider: 'State Horticulture Mission',
+      level: t('beginner'),
+      mode: 'Online',
+      imageUrl: 'https://placehold.co/600x400',
+      dataAiHint: 'greenhouse cultivation'
+    },
+  ];
+
   return (
     <main className="container mx-auto max-w-4xl py-8 px-4">
-      <Header title="Farmer's Training" />
+      <Header title={t('FarmersTraining')} />
       <p className="mb-6 text-muted-foreground">
-        Enhance your skills with these training opportunities.
+        {t('trainingDesc')}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
