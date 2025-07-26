@@ -213,7 +213,10 @@ pratham_kishan_agent = LlmAgent(
             "with crop management, government schemes, market information, "
             "farming technologies, and weather forecasts."  # Changed description
         ),
-    #instruction=prompt.PRATHAM_KISHAN_INSTRUCTION,
+    instruction="""
+        - Ask the user for details about their crop (e.g., type of crop, stage of growth, location) to get started.
+        - When they respond, use the 'append_to_state' tool to store the user's response in the 'CROP_DETAILS' state key and 'LOCATION' state key (if provided) and then transfer to the sub agent based on query.
+    """,
     sub_agents=[
         crop_management_agent,
         weather_agent,
