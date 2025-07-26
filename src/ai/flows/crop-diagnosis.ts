@@ -23,6 +23,8 @@ const DiagnoseCropInputSchema = z.object({
 export type DiagnoseCropInput = z.infer<typeof DiagnoseCropInputSchema>;
 
 const DiagnoseCropOutputSchema = z.object({
+  isDisease: z.boolean().describe('Whether the diagnosis is a disease that may require expert consultation.'),
+  diseaseName: z.string().optional().describe('The name of the disease if identified.'),
   diagnosis: z.string().describe('The diagnosis of the crop issue.'),
   solutions: z.string().describe('Suggested solutions for the crop issue.'),
 });
@@ -42,6 +44,8 @@ You will use the following information to diagnose the crop and its issues, and 
 
 Description: {{{description}}}
 Photo: {{media url=photoDataUri}}
+
+First, determine if the issue is a plant disease. If it is, set 'isDisease' to true and provide the name of the disease in 'diseaseName'.
 
 Respond in the same language as the description: {{{language}}}.
 
