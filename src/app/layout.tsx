@@ -5,6 +5,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import OfflineIndicator from '@/components/shared/OfflineIndicator';
 import { LanguageProvider } from '@/context/LanguageContext';
+import Chatbot from '@/components/shared/Chatbot';
 
 
 export default function RootLayout({
@@ -24,6 +25,7 @@ export default function RootLayout({
           {children}
           <Toaster />
           <OfflineIndicator />
+          <Chatbot />
         </body>
       </html>
     </LanguageProvider>
