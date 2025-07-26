@@ -39,7 +39,7 @@ def append_to_state(
 # Agents
 
 # Gov Scheme Agents
-scheme_researcher = Agent(
+scheme_researcher = LlmAgent(
     name="scheme_researcher",
     model=model_name,
     description="Researches government schemes based on crop details.",
@@ -55,7 +55,7 @@ scheme_researcher = Agent(
     tools=[google_search],
 )
 
-gov_scheme_critic = Agent(
+gov_scheme_critic = LlmAgent(
     name="gov_scheme_critic",
     model=model_name,
     description="Maximizes benefits from government schemes.",
@@ -86,7 +86,7 @@ gov_scheme_agent = LoopAgent(
 )
 
 # Mandi Price Agents
-mandi_researcher = Agent(
+mandi_researcher = LlmAgent(
     name="mandi_researcher",
     model=model_name,
     description="Researches current mandi prices for specified crops.",
@@ -102,7 +102,7 @@ mandi_researcher = Agent(
     tools=[google_search],
 )
 
-mandi_profit = Agent(
+mandi_profit = LlmAgent(
     name="mandi_profit",
     model=model_name,
     description="Calculates potential profit based on mandi prices and crop details.",
@@ -120,7 +120,7 @@ mandi_profit = Agent(
     tools=[append_to_state],
 )
 
-mandi_critic = Agent(
+mandi_critic = LlmAgent(
     name="mandi_critic",
     model=model_name,
     description="Suggests ways to maximize profit from mandi sales.",
@@ -153,7 +153,7 @@ mandi_price_agent = LoopAgent(
 )
 
 # Individual Pratham Kisan Agents
-crop_management_agent = Agent(
+crop_management_agent = LlmAgent(
     name="crop_management_agent",
     model=model_name,
     description="Provides advice on crop management.",
@@ -167,7 +167,7 @@ crop_management_agent = Agent(
     tools=[google_search],
 )
 
-weather_agent = Agent(
+weather_agent = LlmAgent(
     name="weather_agent",
     model=model_name,
     description="Provides weather forecasts and their impact on crops.",
@@ -180,7 +180,7 @@ weather_agent = Agent(
     tools=[google_search],
 )
 
-farming_new_tech_agent = Agent(
+farming_new_tech_agent = LlmAgent(
     name="farming_new_tech_agent",
     model=model_name,
     description="Suggests new farming technologies and practices.",
@@ -213,7 +213,7 @@ pratham_kishan_agent = LlmAgent(
     ],
 )
 
-root_agent = Agent(
+root_agent = LlmAgent(
     name="greeter",
     model=model_name,
     description="Guides the user in getting agricultural advice.",
