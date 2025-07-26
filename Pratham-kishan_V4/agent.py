@@ -157,16 +157,13 @@ crop_management_agent = Agent(
     model=model_name,
     description="Provides advice on crop management.",
     instruction="""
-    CROP_DETAILS:
-    {{ CROP_DETAILS? }}
-
     INSTRUCTIONS:
     Based on the CROP_DETAILS, provide comprehensive advice on crop management,
     including soil preparation, sowing, irrigation, pest control, and harvesting.
     Use the 'Google Search' tool for information if needed.
     Use the 'append_to_state' tool to add your advice to the 'CROP_MANAGEMENT_ADVICE' field.
     """,
-    tools=[google_search, append_to_state],
+    tools=[google_search],
 )
 
 weather_agent = Agent(
