@@ -148,7 +148,7 @@ mandi_profit = Agent(
     INSTRUCTIONS:
     Based on the MANDI_PRICE_DATA and CROP_DETAILS (e.g., expected yield, production cost),
     calculate the potential profit.
-    calculate the distance to mandi using MCPToolset
+    calculate the distance to mandi or Vegetable mandi or fruit mandi or Vegetable market or fruit market  using MCPToolset
     Use the 'append_to_state' tool to add your profit calculation and distance to mandi to the 'PROFIT_ANALYSIS' and 'DISTANCE_ANALYSIS' field.
     """,
     generate_content_config=types.GenerateContentConfig(
