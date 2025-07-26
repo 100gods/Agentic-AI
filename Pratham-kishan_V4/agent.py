@@ -21,6 +21,7 @@ load_dotenv()
 model_name = os.getenv("MODEL")
 print(model_name)
 
+
 # Tools
 def append_to_state(
     tool_context: ToolContext, field: str, response: str
@@ -60,6 +61,24 @@ scheme_researcher = LlmAgent(
     tools=[google_search],
 )
 
+scheme_benefit = LlmAgent(
+    name="scheme_benefit",
+    model=model_name,
+    description="Calculated the benefits from the scheme.",
+    instruction="""
+    CROP_DETAILS:
+    {{ CROP_DETAILS? }}
+
+    INSTRUCTIONS:
+    Use the 'Google Search' tool to find maximum benefit from the scheme.
+    Summarize the schemes you found.
+    """,
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0.5,
+        ),
+    tools=[google_search],
+)
+
 gov_scheme_critic = Agent(
     name="gov_scheme_critic",
     model=model_name,
@@ -88,7 +107,8 @@ gov_scheme_agent = LoopAgent(
     description="Iterates through research and analysis to maximize government scheme benefits.",
     sub_agents=[
         scheme_researcher,
-        gov_scheme_critic
+        gov_scheme_critic,
+        scheme_benefit
     ],
     max_iterations=2,
 )
