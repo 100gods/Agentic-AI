@@ -54,10 +54,8 @@ scheme_researcher = LlmAgent(
     Use the 'Google Search' tool to find relevant government schemes for the provided CROP_DETAILS.
     Summarize the schemes you found.
     """,
-    before_model_callback=log_query_to_model,
-    after_model_callback=log_model_response,
     generate_content_config=types.GenerateContentConfig(
-            temperature=0,
+            temperature=0.5,
         ),
     tools=[google_search],
 )
@@ -79,10 +77,8 @@ gov_scheme_critic = Agent(
     If the schemes are optimal or no further improvements can be made, use the 'exit_loop' tool.
     Explain your decision and briefly summarize the feedback you have provided.
     """,
-    before_model_callback=log_query_to_model,
-    after_model_callback=log_model_response,
     generate_content_config=types.GenerateContentConfig(
-            temperature=0,
+            temperature=0.5,
         ),
     tools=[append_to_state, exit_loop],
 )
@@ -94,7 +90,7 @@ gov_scheme_agent = LoopAgent(
         scheme_researcher,
         gov_scheme_critic
     ],
-    max_iterations=3,
+    max_iterations=2,
 )
 
 # Mandi Price Agents
@@ -133,8 +129,6 @@ mandi_profit = Agent(
     calculate the potential profit.
     Use the 'append_to_state' tool to add your profit calculation to the 'PROFIT_ANALYSIS' field.
     """,
-    before_model_callback=log_query_to_model,
-    after_model_callback=log_model_response,
     generate_content_config=types.GenerateContentConfig(
             temperature=0,
         ),
@@ -159,10 +153,8 @@ mandi_critic = Agent(
     If the profit is optimal or no further improvements can be made, use the 'exit_loop' tool.
     Explain your decision and briefly summarize the feedback you have provided.
     """,
-    before_model_callback=log_query_to_model,
-    after_model_callback=log_model_response,
     generate_content_config=types.GenerateContentConfig(
-            temperature=0,
+            temperature=0.2,
         ),
     tools=[append_to_state, exit_loop],
 )
@@ -175,7 +167,7 @@ mandi_price_agent = LoopAgent(
         mandi_profit,
         mandi_critic
     ],
-    max_iterations=3,
+    max_iterations=2,
 )
 
 # Individual Pratham Kisan Agents
@@ -194,7 +186,7 @@ crop_management_agent = Agent(
     after_model_callback=log_model_response,
     tools=[google_search],
     generate_content_config=types.GenerateContentConfig(
-            temperature=0,
+            temperature=0.2,
         ),
 )
 
@@ -211,7 +203,7 @@ weather_agent = Agent(
     after_model_callback=log_model_response,
     tools=[google_search],
     generate_content_config=types.GenerateContentConfig(
-            temperature=0,
+            temperature=0.2,
         ),
 )
 
@@ -227,7 +219,7 @@ farming_new_tech_agent = Agent(
     """,
     tools=[google_search],
     generate_content_config=types.GenerateContentConfig(
-            temperature=0,
+            temperature=0.2,
         ),
 )
 
@@ -244,7 +236,7 @@ simple_agents = Agent(
                 AgentTool(agent=farming_new_tech_agent),
     ],
     generate_content_config=types.GenerateContentConfig(
-            temperature=0,
+            temperature=0.2,
         ),
 
 )
@@ -264,7 +256,7 @@ pratham_kishan_agent = LlmAgent(
                 mandi_price_agent
      ],
      generate_content_config=types.GenerateContentConfig(
-               temperature=0,
+               temperature=0.2,
            ),
 )
 
@@ -279,7 +271,7 @@ root_agent = LlmAgent(
     """,
     tools=[append_to_state],
     generate_content_config=types.GenerateContentConfig(
-            temperature=0,
+            temperature=0.2,
         ),
     sub_agents=[pratham_kishan_agent],
 )
