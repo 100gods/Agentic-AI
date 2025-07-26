@@ -23,7 +23,7 @@ mandi_finance_agent = Agent(name="mandi_finance_agent", instruction=prompts.FINA
 mandi_critic_agent = CriticAgent(critique_prompt=prompts.CRITIC_PROMPT)
 
 # --- The Loop Agent ---
-refinement_loop = LoopAgent(
+refinement_loop_mandi = LoopAgent(
     name ="mandi_loop_agent",
     sub_agents=[mandi_critic_agent, mandi_finance_agent],
     max_iterations=3,
@@ -33,7 +33,7 @@ mandi_price_loop = SequentialAgent(
     name="mandi_first_agent",
     sub_agents=[
         mandi_agent, # Run first to create initial doc
-        refinement_loop       # Then run the critique/refine loop
+        refinement_loop_mandi       # Then run the critique/refine loop
     ],
     description="Writes an initial document and then iteratively refines it with critique using an exit tool."
 )

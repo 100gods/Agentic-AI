@@ -24,7 +24,7 @@ schema_agent = LlmAgent(name="schema_agent", instruction=prompts.SCHEMA_AGENT_PR
 gov_schema_critic_agent = CriticAgent(critique_prompt=prompts.CRITIC_PROMPT)
 
 # --- The Loop Agent ---
-refinement_loop = LoopAgent(
+refinement_loop_gov = LoopAgent(
     name = "gov_schema_loop",
     sub_agents=[gov_schema_critic_agent, schema_agent],
     max_iterations=3,
@@ -34,7 +34,7 @@ gov_scheme_agent = SequentialAgent(
     name="gov_scheme_agent_first",
     sub_agents=[
         initial_gov_agent, # Run first to create initial doc
-        refinement_loop       # Then run the critique/refine loop
+        refinement_loop_gov       # Then run the critique/refine loop
     ],
     description="Writes an initial document and then iteratively refines it with critique using an exit tool."
 )

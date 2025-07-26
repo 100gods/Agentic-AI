@@ -33,7 +33,7 @@ finance_agent = LlmAgent(name = "crop_finance_agent",
 crop_critic_agent = CriticAgent(critique_prompt=prompts.CRITIC_PROMPT)
 
 # --- The Loop Agent ---
-refinement_loop = LoopAgent(
+refinement_loop_crop = LoopAgent(
     name = "crop_agent_refine",
     sub_agents=[crop_critic_agent, finance_agent],
     max_iterations=3,
@@ -44,7 +44,7 @@ crop_agent = SequentialAgent(
     name="crop_agent_first",
     sub_agents=[
         initial_crop_agent, # Run first to create initial doc
-        refinement_loop       # Then run the critique/refine loop
+        refinement_loop_crop       # Then run the critique/refine loop
     ],
     description="Writes an initial document and then iteratively refines it with critique using an exit tool."
 )
