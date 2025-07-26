@@ -18,12 +18,12 @@ from google.adk.agents import LlmAgent
 from google.adk.tools.agent_tool import AgentTool
 
 from . import prompt
-from .sub_agents.crop_management import crop_management_agent
-from .sub_agents.gov_scheme import gov_scheme_agent
-from .sub_agents.market_information import market_information_agent
-from .sub_agents.farming_tech import farming_tech_agent
-from .sub_agents.weather_information import weather_information_agent
-
+from .sub_agents.crop_management_loop import crop_agent
+from .sub_agents.gov_schema_loop import gov_scheme_agent
+from .sub_agents.mandi_price_loop import mandi_price_loop
+from .sub_agents.farming_tech import farming_tech_sub_agent
+from .sub_agents.weather import weather_sub_agent
+from .sub_agents import crop_management_loop, gov_schema_loop, mandi_price_loop,weather_sub_agent,farming_tech_sub_agent
 
 MODEL = "gemini-2.0-flash"
 
@@ -37,14 +37,14 @@ farmer_advisor = LlmAgent(
         "with crop management, government schemes, market information, "
         "farming technologies, and weather forecasts."  # Changed description
     ),
-    instruction=prompt.PRATHAM_KISHAN_FRAMER_PROMPT,  # Assuming a new prompt for framer
+    instruction=prompt.PRATHAM_KISHAN_INSTRUCTION,  # Assuming a new prompt for framer
     output_key="framer_advisor_output",
     tools=[
-        AgentTool(agent=crop_management_agent),
+        AgentTool(agent=crop_agent),
         AgentTool(agent=gov_scheme_agent),
-        AgentTool(agent=market_information_agent),
-        AgentTool(agent=farming_tech_agent),
-        AgentTool(agent=weather_information_agent),
+        AgentTool(agent=mandi_price_loop),
+        AgentTool(agent=farming_tech_sub_agent),
+        AgentTool(agent=weather_sub_agent),
     ],
 )
 

@@ -56,7 +56,7 @@ Ensure all state keys are correctly used to pass information between subagents.
 Here's the step-by-step breakdown.
 For each step, explicitly call the designated subagent and adhere strictly to the specified input and output formats:
 
-* Optimize Crop Management (Subagent: crop_management)
+* Crop Management (Subagent: crop_management)
 
 Input: Prompt the user to provide details about their crop (e.g., type of crop, current growth stage, soil type, location).
 Action: Call the crop_management subagent, passing the user-provided crop details.
