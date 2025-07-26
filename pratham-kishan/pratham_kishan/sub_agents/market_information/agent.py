@@ -15,6 +15,7 @@
 """Execution_analyst_agent for finding the ideal execution strategy"""
 
 from google.adk import Agent
+from google.adk.tools import google_search
 
 from . import prompt
 
@@ -23,6 +24,7 @@ MODEL = "gemini-2.5-pro"
 market_information_agent = Agent(
     model=MODEL,
     name="market_information_agent",
-    instruction=prompt.EXECUTION_ANALYST_PROMPT,
+    instruction=prompt.CROP_MARKET_ANALYSIS_PROMPT,
     output_key="market_informations_output",
+    tools=[google_search],
 )

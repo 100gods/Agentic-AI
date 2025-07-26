@@ -15,6 +15,7 @@
 """Risk Analysis Agent for providing the final risk evaluation"""
 
 from google.adk import Agent
+from google.adk.tools import google_search
 
 from . import prompt
 
@@ -23,6 +24,7 @@ MODEL="gemini-2.5-pro"
 gov_scheme_agent = Agent(
     model=MODEL,
     name="gov_scheme_agent",
-    instruction=prompt.RISK_ANALYST_PROMPT,
+    instruction=prompt.GOV_SCHEME_ASSISTANT_PROMPT,
     output_key="gov_scheme_output",
+    tools=[google_search],
 )

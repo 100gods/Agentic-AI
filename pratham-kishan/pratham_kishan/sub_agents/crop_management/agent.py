@@ -24,7 +24,7 @@ MODEL = "gemini-2.5-pro"
 crop_management_agent = Agent(
     model=MODEL,
     name="crop_management_agent",
-    instruction=prompt.DATA_ANALYST_PROMPT,
+    instruction=prompt.CROP_MANAGEMENT_PROMPT,
     output_key="crop_management_analysis_output",
     tools=[google_search],
 )

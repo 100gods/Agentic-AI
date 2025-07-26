@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""trading_analyst_agent for proposing trading strategies"""
+"""farming_tech_agent for proposing trading strategies"""
 
-from .agent import trading_analyst_agent
+from .agent import farming_tech_agent

@@ -43,7 +43,7 @@ farmer_advisor = LlmAgent(
         AgentTool(agent=crop_management_agent),
         AgentTool(agent=gov_scheme_agent),
         AgentTool(agent=market_information_agent),
-        AgentTool(agent=framing_tech_agent),
+        AgentTool(agent=farming_tech_agent),
         AgentTool(agent=weather_information_agent),
     ],
 )

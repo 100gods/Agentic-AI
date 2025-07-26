@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""data_analyst_agent for finding information using google search"""
+"""crop_management_agent for finding information using google search"""
 
-from .agent import data_analyst_agent
+from .agent import crop_management_agent

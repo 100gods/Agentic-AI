@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Risk Analysis Agent for providing the final risk evaluation"""
+"""gov_scheme_agent for providing the final risk evaluation"""
 
-from .agent import risk_analyst_agent
+from .agent import gov_scheme_agent

@@ -15,6 +15,7 @@
 """farming_agent for finding the farming strategy and informations"""
 
 from google.adk import Agent
+from google.adk.tools import google_search
 
 from . import prompt
 
@@ -23,6 +24,7 @@ MODEL="gemini-2.5-pro"
 farming_tech_agent = Agent(
     model=MODEL,
     name="farming_tech_agent",
-    instruction=prompt.TRADING_ANALYST_PROMPT,
+    instruction=prompt.FARMING_TECH_PROMPT,
     output_key="farming_tech_agent_output",
+    tools=[google_search],
 )
