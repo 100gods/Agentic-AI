@@ -8,6 +8,7 @@ from google.adk import Agent
 from google.adk.agents import SequentialAgent, LoopAgent, ParallelAgent, LlmAgent
 from google.adk.tools.tool_context import ToolContext
 from google.adk.tools import google_search, exit_loop
+from . import prompt
 
 cloud_logging_client = google.cloud.logging.Client()
 cloud_logging_client.setup_logging()
