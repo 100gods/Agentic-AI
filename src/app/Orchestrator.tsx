@@ -62,12 +62,17 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
             };
 
             recognitionRef.current.onerror = (event: any) => {
-                console.error('Speech recognition error', event.error);
-                toast({
-                    variant: 'destructive',
-                    title: 'Voice Recognition Error',
-                    description: `An error occurred: ${event.error}`,
-                });
+                if (event.error === 'no-speech') {
+                    // This error is common when the user doesn't speak.
+                    // We can ignore it and just stop listening.
+                } else {
+                    console.error('Speech recognition error', event.error);
+                    toast({
+                        variant: 'destructive',
+                        title: 'Voice Recognition Error',
+                        description: `An error occurred: ${event.error}`,
+                    });
+                }
                 setIsListening(false);
             };
 
