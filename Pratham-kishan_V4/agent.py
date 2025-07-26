@@ -9,6 +9,7 @@ from google.adk.agents import SequentialAgent, LoopAgent, ParallelAgent, LlmAgen
 from google.adk.tools.tool_context import ToolContext
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools import google_search, exit_loop
+from google.genai import types
 from . import prompt
 
 cloud_logging_client = google.cloud.logging.Client()
@@ -52,6 +53,9 @@ scheme_researcher = LlmAgent(
     Use the 'Google Search' tool to find relevant government schemes for the provided CROP_DETAILS.
     Summarize the schemes you found.
     """,
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
     tools=[google_search],
 )
 
@@ -72,6 +76,9 @@ gov_scheme_critic = Agent(
     If the schemes are optimal or no further improvements can be made, use the 'exit_loop' tool.
     Explain your decision and briefly summarize the feedback you have provided.
     """,
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
     tools=[append_to_state, exit_loop],
 )
 
@@ -82,6 +89,9 @@ gov_scheme_agent = LoopAgent(
         scheme_researcher,
         gov_scheme_critic
     ],
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
     max_iterations=3,
 )
 
@@ -98,6 +108,9 @@ mandi_researcher = Agent(
     Use the 'Google Search' tool to find current mandi prices for the specified CROP_DETAILS.
     Summarize the prices you found.
     """,
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
     tools=[google_search],
 )
 
@@ -116,6 +129,9 @@ mandi_profit = Agent(
     calculate the potential profit.
     Use the 'append_to_state' tool to add your profit calculation to the 'PROFIT_ANALYSIS' field.
     """,
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
     tools=[append_to_state],
 )
 
@@ -137,6 +153,9 @@ mandi_critic = Agent(
     If the profit is optimal or no further improvements can be made, use the 'exit_loop' tool.
     Explain your decision and briefly summarize the feedback you have provided.
     """,
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
     tools=[append_to_state, exit_loop],
 )
 
@@ -164,6 +183,9 @@ crop_management_agent = Agent(
     Use the 'append_to_state' tool to add your advice to the 'CROP_MANAGEMENT_ADVICE' field.
     """,
     tools=[google_search],
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
 )
 
 weather_agent = Agent(
@@ -176,6 +198,9 @@ weather_agent = Agent(
     Analyze how the weather might impact the CROP_DETAILS and suggest necessary actions.
     """,
     tools=[google_search],
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
 )
 
 farming_new_tech_agent = Agent(
@@ -189,6 +214,9 @@ farming_new_tech_agent = Agent(
     Use the 'Google Search' tool for information.
     """,
     tools=[google_search],
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
 )
 
 simple_agents = Agent(
@@ -202,10 +230,13 @@ simple_agents = Agent(
                 AgentTool(agent=weather_agent),
                 AgentTool(agent=farming_new_tech_agent),
     ],
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
 
 )
 
-pratham_kishan_agent = Agent(
+pratham_kishan_agent = LlmAgent(
     name="pratham_kishan_agent",
     model = model_name,
     description=(
@@ -219,6 +250,9 @@ pratham_kishan_agent = Agent(
                 gov_scheme_agent,
                 mandi_price_agent
      ],
+     generate_content_config=types.GenerateContentConfig(
+               temperature=0,
+           ),
 )
 
 root_agent = LlmAgent(
@@ -231,5 +265,8 @@ root_agent = LlmAgent(
     - When they respond, use the 'append_to_state' tool to store the user's response in the 'CROP_DETAILS' state key and 'LOCATION' state key (if provided) and then transfer to the 'pratham_kishan_agent'.
     """,
     tools=[append_to_state],
+    generate_content_config=types.GenerateContentConfig(
+            temperature=0,
+        ),
     sub_agents=[pratham_kishan_agent],
 )
