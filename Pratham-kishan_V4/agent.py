@@ -155,21 +155,21 @@ mandi_profit = Agent(
         ),
     tools=[append_to_state,
             MCPToolset(
-                                       connection_params=StdioServerParameters(
-                                           command='npx',
-                                           args=[
-                                               "-y",
-                                               "@modelcontextprotocol/server-google-maps",
-                                           ],
-                                           # Pass the API key as an environment variable to the npx process
-                                           # This is how the MCP server for Google Maps expects the key.
-                                           env={
-                                               "GOOGLE_MAPS_API_KEY": google_maps_api_key
-                                           }
-                                       ),
-                                       # You can filter for specific Maps tools if needed:
-                                       # tool_filter=['get_directions', 'find_place_by_id']
-    )],
+                    connection_params=StdioConnectionParams(
+                        server_params=StdioServerParameters(
+                            command='npx',
+                            args=[
+                                "-y",
+                                "@modelcontextprotocol/server-google-maps",
+                            ],
+                            env={
+                                "GOOGLE_MAPS_API_KEY": google_maps_api_key
+                            }
+                        ),
+                        timeout=15,
+                        ),
+                    )
+    ],
 )
 
 mandi_critic = Agent(
