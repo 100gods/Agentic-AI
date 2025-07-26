@@ -51,7 +51,7 @@ scheme_researcher = Agent(
     Use the 'append_to_state' tool to add your research to the 'SCHEME_DATA' field.
     Summarize the schemes you found.
     """,
-    tools=[google_search, append_to_state],
+    tools=[google_search],
 )
 
 gov_scheme_critic = Agent(
@@ -98,7 +98,7 @@ mandi_researcher = Agent(
     Use the 'append_to_state' tool to add the mandi price data to the 'MANDI_PRICE_DATA' field.
     Summarize the prices you found.
     """,
-    tools=[google_search, append_to_state],
+    tools=[google_search],
 )
 
 mandi_profit = Agent(
