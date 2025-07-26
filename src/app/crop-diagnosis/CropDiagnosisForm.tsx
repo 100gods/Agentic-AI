@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, Calendar, Video, Clock } from 'lucide-react';
+import { Loader2, Calendar, Video, Clock, Mic, StopCircle, Volume2 } from 'lucide-react';
 import { add, format } from 'date-fns';
 
 
@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { diagnoseCrop, type DiagnoseCropOutput } from '@/ai/flows/crop-diagnosis';
+import { textToSpeech, type TextToSpeechOutput } from '@/ai/flows/tts';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -73,16 +74,32 @@ const experts = [
 
 type Expert = typeof experts[0];
 
+const languageToCode: Record<string, string> = {
+  English: 'en-US',
+  Hindi: 'hi-IN',
+  Spanish: 'es-ES',
+  Marathi: 'mr-IN',
+};
+
 export default function CropDiagnosisForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DiagnoseCropOutput | null>(null);
+  const [audioResult, setAudioResult] = useState<TextToSpeechOutput | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { toast } = useToast();
+  
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isConfirming, setIsConfirming] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  
+  useEffect(() => {
+    audioRef.current = new Audio();
+  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -91,6 +108,69 @@ export default function CropDiagnosisForm() {
       language: 'English',
     },
   });
+  
+  const selectedLanguage = form.watch('language');
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = languageToCode[selectedLanguage] || 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          form.setValue('description', transcript);
+          setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event: any) => {
+        if (event.error !== 'no-speech') {
+          console.error('Speech recognition error', event.error);
+          toast({
+              variant: 'destructive',
+              title: 'Voice Recognition Error',
+              description: `An error occurred: ${event.error}`,
+          });
+        }
+        setIsListening(false);
+      };
+      
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+
+    }
+  }, [selectedLanguage, toast, form]);
+
+  const handleVoiceInput = () => {
+    if (!recognitionRef.current) {
+      toast({
+          variant: 'destructive',
+          title: 'Not Supported',
+          description: 'Voice recognition is not supported in your browser.',
+      });
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+    } else {
+      form.setValue('description', '');
+      recognitionRef.current.lang = languageToCode[selectedLanguage] || 'en-US';
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+
+  const playAudioResult = () => {
+    if (audioRef.current && audioResult?.audioDataUri) {
+      audioRef.current.src = audioResult.audioDataUri;
+      audioRef.current.play();
+    }
+  };
+
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -108,6 +188,7 @@ export default function CropDiagnosisForm() {
   const onSubmit = async (values: FormValues) => {
     setIsLoading(true);
     setResult(null);
+    setAudioResult(null);
     setBookingConfirmed(false);
     setSelectedExpert(null);
     setSelectedSlot(null);
@@ -124,6 +205,11 @@ export default function CropDiagnosisForm() {
           language: values.language,
         });
         setResult(response);
+
+        const textForTTS = `Diagnosis: ${response.diagnosis}. Solutions: ${response.solutions}`;
+        const audioResponse = await textToSpeech(textForTTS);
+        setAudioResult(audioResponse);
+
       } catch (error) {
         console.error('Diagnosis failed:', error);
         toast({
@@ -172,10 +258,7 @@ export default function CropDiagnosisForm() {
     const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
     const endTime = add(startTime, { hours: 1 });
 
-    const
- 
-
-utcStartTime = format(startTime, "yyyyMMdd'T'HHmmss'Z'");
+    const utcStartTime = format(startTime, "yyyyMMdd'T'HHmmss'Z'");
     const utcEndTime = format(endTime, "yyyyMMdd'T'HHmmss'Z'");
 
     const details = `Consultation with ${selectedExpert.name} for ${result?.diseaseName}`;
@@ -246,11 +329,29 @@ utcStartTime = format(startTime, "yyyyMMdd'T'HHmmss'Z'");
                   <FormItem>
                     <FormLabel>Description of Issue</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="e.g., The leaves are turning yellow with brown spots..."
-                        rows={5}
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Textarea
+                          placeholder={isListening ? "Listening..." : "e.g., The leaves are turning yellow with brown spots..."}
+                          rows={5}
+                          {...field}
+                          disabled={isListening}
+                        />
+                         <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleVoiceInput}
+                            disabled={isLoading}
+                            className="absolute bottom-2 right-2"
+                            aria-label={isListening ? 'Stop listening' : 'Start listening'}
+                          >
+                            {isListening ? (
+                                <StopCircle className="h-5 w-5 text-destructive animate-pulse" />
+                            ) : (
+                                <Mic className="h-5 w-5" />
+                            )}
+                          </Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -292,8 +393,17 @@ utcStartTime = format(startTime, "yyyyMMdd'T'HHmmss'Z'");
       {result && (
         <Card className="mt-8 animate-in fade-in">
           <CardHeader>
-            <CardTitle>Analysis Result</CardTitle>
-            <CardDescription>Here is the diagnosis and suggested solutions from our AI expert.</CardDescription>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle>Analysis Result</CardTitle>
+                <CardDescription>Here is the diagnosis and suggested solutions from our AI expert.</CardDescription>
+              </div>
+              {audioResult && (
+                <Button variant="outline" size="icon" onClick={playAudioResult} aria-label="Play diagnosis">
+                  <Volume2 className="h-5 w-5" />
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
@@ -308,7 +418,7 @@ utcStartTime = format(startTime, "yyyyMMdd'T'HHmmss'Z'");
           {result.isDisease && !bookingConfirmed && (
             <>
                 <Separator />
-                <CardContent className="p-0">
+                <CardContent className="p-0 pt-6">
                     <h3 className="font-headline text-lg font-semibold text-destructive">Expert Consultation Recommended</h3>
                     <p className="text-muted-foreground mt-1">Our analysis indicates a disease. You can book a video consultation with an expert for further guidance.</p>
                     <div className="mt-4 space-y-4">
@@ -388,3 +498,5 @@ utcStartTime = format(startTime, "yyyyMMdd'T'HHmmss'Z'");
     </>
   );
 }
+
+    
