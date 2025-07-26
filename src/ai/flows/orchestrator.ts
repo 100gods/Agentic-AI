@@ -19,7 +19,7 @@ const prompt = ai.definePrompt({
   name: 'orchestratorPrompt',
   input: {schema: OrchestrateInputSchema},
   output: {schema: OrchestrateOutputSchema},
-  prompt: `You are an AI orchestrator for a farming assistance app called AgriAssist AI. Your job is to understand the user's request and determine which of the available agents can best handle it.
+  prompt: `You are an AI orchestrator for a farming assistance app called Pratham Kishan. Your job is to understand the user's request and determine which of the available agents can best handle it.
 
 The available agents are:
 - Crop Diagnosis: For identifying crop diseases and issues from images and descriptions.
