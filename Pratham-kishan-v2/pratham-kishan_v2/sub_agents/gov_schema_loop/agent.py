@@ -19,8 +19,8 @@ class CriticAgent(Agent):
                          instruction=critique_prompt)
 
 # --- Child Agents for this Loop ---
-initial_gov_agent = LlmAgent(name="initial_gov_agent", instruction=prompts.CROP_AGENT_PROMPT, tools=[google_search])
-schema_agent = LlmAgent(name="schema_agent", instruction=prompts.SCHEMA_AGENT_PROMPT, tools=[google_search])
+initial_gov_agent = LlmAgent(name="initial_gov_agent", model=MODEL,instruction=prompts.CROP_AGENT_PROMPT, tools=[google_search])
+schema_agent = LlmAgent(name="schema_agent",model=MODEL, instruction=prompts.SCHEMA_AGENT_PROMPT, tools=[google_search])
 gov_schema_critic_agent = CriticAgent(critique_prompt=prompts.CRITIC_PROMPT)
 
 # --- The Loop Agent ---

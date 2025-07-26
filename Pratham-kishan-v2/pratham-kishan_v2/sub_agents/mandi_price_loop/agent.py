@@ -18,8 +18,8 @@ class CriticAgent(Agent):
                          instruction=critique_prompt)
 
 # --- Child Agents for this Loop ---
-mandi_agent = LlmAgent(name = "mandi_agent_inital", instruction=prompts.MANDI_AGENT_PROMPT, tools=[google_search])
-mandi_finance_agent = Agent(name="mandi_finance_agent", instruction=prompts.FINANCE_AGENT_PROMPT, tools=[google_search])
+mandi_agent = LlmAgent(name = "mandi_agent_inital", model=MODEL,,instruction=prompts.MANDI_AGENT_PROMPT, tools=[google_search])
+mandi_finance_agent = Agent(name="mandi_finance_agent", model=MODEL,,instruction=prompts.FINANCE_AGENT_PROMPT, tools=[google_search])
 mandi_critic_agent = CriticAgent(critique_prompt=prompts.CRITIC_PROMPT)
 
 # --- The Loop Agent ---
