@@ -25,7 +25,7 @@ Ensure all state keys are correctly used to pass information between subagents.
 Here's the step-by-step breakdown.
 For each step, explicitly call the designated subagent and adhere strictly to the specified input and output formats:
 
-* Crop Management (Subagent: crop_agent)
+* Crop Management (Subagent: crop_management_agent)
 
 Input: Prompt the user to provide details about their crop (e.g., type of crop, current growth stage, soil type, location).
 Action: Call the crop_management subagent, passing the user-provided crop details.
@@ -41,7 +41,7 @@ The user-selected farming activity.
 Expected Output: The gov_scheme subagent MUST generate information on relevant government schemes and subsidies available for the specified location and farming activity.
 Output the generated extended version by visualizing the results as markdown
 
-* Analyze Market Information (Subagent: mandi_price_loop)
+* Analyze Market Information (Subagent: mandi_price_agent)
 
 Input:
 Prompt the user to specify the crop(s) they are interested in.
@@ -52,7 +52,7 @@ The user-specified markets/regions.
 Expected Output: The market_information subagent MUST provide an analysis of crop prices in various markets, including trends and potential demand.
 Output the generated extended version by visualizing the results as markdown
 
-* Discover Farming Technologies (Subagent: farming_tech_sub_agent)
+* Discover Farming Technologies (Subagent: farming_new_tech_agent)
 
 Input:
 The current crop management recommendations (from state key, if available).
@@ -63,7 +63,7 @@ The user's stated technology interests.
 Expected Output: The framing_tech subagent MUST provide information on new technologies and developments in the field of farming relevant to the user's needs, including benefits and implementation considerations.
 Output the generated extended version by visualizing the results as markdown
 
-* Obtain Weather Information (Subagent: weather_sub_agent)
+* Obtain Weather Information (Subagent: weather_agent)
 
 Input:
 Prompt the user to provide their specific farming location (e.g., village, district, coordinates).

@@ -171,17 +171,12 @@ weather_agent = Agent(
     model=model_name,
     description="Provides weather forecasts and their impact on crops.",
     instruction="""
-    LOCATION:
-    {{ LOCATION? }}
-    CROP_DETAILS:
-    {{ CROP_DETAILS? }}
-
     INSTRUCTIONS:
     Use the 'Google Search' tool to get the current and forecasted weather for the LOCATION.
     Analyze how the weather might impact the CROP_DETAILS and suggest necessary actions.
     Use the 'append_to_state' tool to add your weather report and impact analysis to the 'WEATHER_REPORT' field.
     """,
-    tools=[google_search, append_to_state],
+    tools=[google_search],
 )
 
 farming_new_tech_agent = Agent(
@@ -189,16 +184,13 @@ farming_new_tech_agent = Agent(
     model=model_name,
     description="Suggests new farming technologies and practices.",
     instruction="""
-    CROP_DETAILS:
-    {{ CROP_DETAILS? }}
-
     INSTRUCTIONS:
     Based on the CROP_DETAILS, research and suggest new farming technologies,
     innovative practices, and sustainable agriculture methods that could improve yield or efficiency.
     Use the 'Google Search' tool for information.
     Use the 'append_to_state' tool to add your suggestions to the 'NEW_TECH_SUGGESTIONS' field.
     """,
-    tools=[google_search, append_to_state],
+    tools=[google_search],
 )
 
 pratham_kishan_agent = LlmAgent(
@@ -210,10 +202,11 @@ pratham_kishan_agent = LlmAgent(
             "with crop management, government schemes, market information, "
             "farming technologies, and weather forecasts."  # Changed description
         ),
-    instruction="""
+    """ instruction= """"""
         - Ask the user for details about their crop (e.g., type of crop, stage of growth, location) to get started.
         - When they respond, use the 'append_to_state' tool to store the user's response in the 'CROP_DETAILS' state key and 'LOCATION' state key (if provided) and then transfer to the sub agent based on query.
-    """,
+     """""", """
+     instruction = prompt.PRATHAM_KISHAN_INSTRUCTION,
     sub_agents=[
         crop_management_agent,
         weather_agent,
