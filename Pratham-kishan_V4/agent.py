@@ -216,7 +216,7 @@ pratham_kishan_agent = ParallelAgent(
     ],
 )
 
-greeter = Agent(
+root_agent = Agent(
     name="greeter",
     model=model_name,
     description="Guides the user in getting agricultural advice.",
