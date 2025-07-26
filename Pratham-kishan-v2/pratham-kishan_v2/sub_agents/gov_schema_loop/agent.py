@@ -19,7 +19,7 @@ class CriticAgent(Agent):
                          instruction=critique_prompt)
 
 # --- Child Agents for this Loop ---
-initial_writer_agent = LlmAgent(name="crop_agent", instruction=prompts.CROP_AGENT_PROMPT, tools=[google_search])
+initial_gov_agent = LlmAgent(name="initial_gov_agent", instruction=prompts.CROP_AGENT_PROMPT, tools=[google_search])
 schema_agent = LlmAgent(name="schema_agent", instruction=prompts.SCHEMA_AGENT_PROMPT, tools=[google_search])
 gov_schema_critic_agent = CriticAgent(critique_prompt=prompts.CRITIC_PROMPT)
 
@@ -33,7 +33,7 @@ refinement_loop = LoopAgent(
 gov_scheme_agent = SequentialAgent(
     name="IterativeWritingPipeline",
     sub_agents=[
-        initial_writer_agent, # Run first to create initial doc
+        initial_gov_agent, # Run first to create initial doc
         refinement_loop       # Then run the critique/refine loop
     ],
     description="Writes an initial document and then iteratively refines it with critique using an exit tool."
