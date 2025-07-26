@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from google.adk import Agent
 from google.adk.agents import SequentialAgent, LoopAgent, ParallelAgent, LlmAgent
 from google.adk.tools.tool_context import ToolContext
+from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools import google_search, exit_loop
 from . import prompt
 
