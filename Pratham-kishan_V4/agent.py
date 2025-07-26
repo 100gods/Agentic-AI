@@ -191,6 +191,19 @@ farming_new_tech_agent = Agent(
     tools=[google_search],
 )
 
+simple_agents = Agent(
+    name = "simple agents",
+    model = model_name,
+    description=(
+                "based on parent agent just call sub agent"  # Changed description
+            ),
+    sub_agents = [crop_management_agent,
+                weather_agent,
+                farming_new_tech_agent
+    ]
+
+)
+
 pratham_kishan_agent = Agent(
     name="pratham_kishan_agent",
     model = model_name,
@@ -201,13 +214,10 @@ pratham_kishan_agent = Agent(
             "farming technologies, and weather forecasts."  # Changed description
         ),
     instruction = prompt.PRATHAM_KISHAN_INSTRUCTION,
-    tools=[
-            AgentTool(agent=crop_management_agent),
-            AgentTool(agent=weather_agent),
-            AgentTool(agent=gov_scheme_agent),
-            AgentTool(agent=mandi_price_agent),
-            AgentTool(agent=farming_new_tech_agent),
-        ],
+     sub_agents=[simple_agents,
+                gov_scheme_agent,
+                mandi_price_agent
+     ],
 )
 
 root_agent = LlmAgent(
