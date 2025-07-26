@@ -107,8 +107,7 @@ gov_scheme_agent = LoopAgent(
     description="Iterates through research and analysis to maximize government scheme benefits.",
     sub_agents=[
         scheme_researcher,
-        gov_scheme_critic,
-        scheme_benefit
+        gov_scheme_critic
     ],
     max_iterations=2,
 )
