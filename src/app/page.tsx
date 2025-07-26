@@ -3,6 +3,8 @@ import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/ca
 import { Leaf, CloudSun, MessageSquare, Landmark, BookOpen, Droplets, Briefcase, BarChart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { User } from 'lucide-react';
+import Orchestrator from './Orchestrator';
+
 
 const features = [
   {
@@ -55,6 +57,13 @@ const features = [
   },
 ];
 
+const agentToFeatureMap: Record<string, { title: string; description: string; href: string; }> = features.reduce((acc, feature) => {
+  const { icon, ...rest } = feature;
+  acc[feature.title] = rest;
+  return acc;
+}, {} as Record<string, { title: string; description: string; href: string; }>);
+
+
 export default function Home() {
   return (
     <div className="relative min-h-screen">
@@ -70,22 +79,9 @@ export default function Home() {
           <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-primary">AgriAssist AI</h1>
           <p className="mt-4 text-lg sm:text-xl text-foreground/80">Your intelligent partner in farming</p>
         </div>
+        
+        <Orchestrator agentToFeatureMap={agentToFeatureMap} />
 
-        <div className="w-full max-w-5xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature) => (
-            <Link href={feature.href} key={feature.href} className="group">
-              <Card className="h-full transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 hover:border-primary/50">
-                <CardHeader className="flex flex-col items-center text-center">
-                  <div className="p-4 bg-primary/10 rounded-full mb-4 group-hover:bg-primary/20 transition-colors">
-                    <feature.icon className="h-8 w-8 text-primary" />
-                  </div>
-                  <CardTitle className="font-headline text-xl">{feature.title}</CardTitle>
-                  <CardDescription className="mt-2 text-sm">{feature.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-          ))}
-        </div>
       </main>
     </div>
   );
