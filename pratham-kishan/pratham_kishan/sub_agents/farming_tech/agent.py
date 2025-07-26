@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Execution_analyst_agent for finding the ideal execution strategy"""
+"""farming_agent for finding the farming strategy and informations"""
 
 from google.adk import Agent
 
@@ -20,9 +20,9 @@ from . import prompt
 
 MODEL="gemini-2.5-pro"
 
-trading_analyst_agent = Agent(
+farming_tech_agent = Agent(
     model=MODEL,
-    name="trading_analyst_agent",
+    name="farming_tech_agent",
     instruction=prompt.TRADING_ANALYST_PROMPT,
-    output_key="proposed_trading_strategies_output",
+    output_key="farming_tech_agent_output",
 )

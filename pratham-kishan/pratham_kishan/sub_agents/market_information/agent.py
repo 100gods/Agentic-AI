@@ -20,9 +20,9 @@ from . import prompt
 
 MODEL = "gemini-2.5-pro"
 
-execution_analyst_agent = Agent(
+market_information_agent = Agent(
     model=MODEL,
-    name="execution_analyst_agent",
+    name="market_information_agent",
     instruction=prompt.EXECUTION_ANALYST_PROMPT,
-    output_key="execution_plan_output",
+    output_key="market_informations_output",
 )

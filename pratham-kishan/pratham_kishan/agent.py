@@ -18,31 +18,34 @@ from google.adk.agents import LlmAgent
 from google.adk.tools.agent_tool import AgentTool
 
 from . import prompt
-from .sub_agents.data_analyst import data_analyst_agent
-from .sub_agents.execution_analyst import execution_analyst_agent
-from .sub_agents.risk_analyst import risk_analyst_agent
-from .sub_agents.trading_analyst import trading_analyst_agent
+from .sub_agents.crop_management import crop_management_agent
+from .sub_agents.gov_scheme import gov_scheme_agent
+from .sub_agents.market_information import market_information_agent
+from .sub_agents.farming_tech import farming_tech_agent
+from .sub_agents.weather_information import weather_information_agent
+
 
 MODEL = "gemini-2.5-pro"
 
 
-financial_coordinator = LlmAgent(
-    name="pratham_kishan",
+farmer_advisor = LlmAgent(
+    name="pratham_kishan_framer_advisor",  # Changed name
     model=MODEL,
     description=(
-        "guide users through a structured process to receive financial "
+        "guide users through a structured process to receive farming "
         "advice by orchestrating a series of expert subagents. help them "
-        "analyze a market ticker, develop trading strategies, define "
-        "execution plans, and evaluate the overall risk."
+        "with crop management, government schemes, market information, "
+        "farming technologies, and weather forecasts."  # Changed description
     ),
-    instruction=prompt.PRATHAM_KISHAN_PROMPT,
-    output_key="financial_coordinator_output",
+    instruction=prompt.PRATHAM_KISHAN_FRAMER_PROMPT,  # Assuming a new prompt for framer
+    output_key="framer_advisor_output",
     tools=[
-        AgentTool(agent=data_analyst_agent),
-        AgentTool(agent=trading_analyst_agent),
-        AgentTool(agent=execution_analyst_agent),
-        AgentTool(agent=risk_analyst_agent),
+        AgentTool(agent=crop_management_agent),
+        AgentTool(agent=gov_scheme_agent),
+        AgentTool(agent=market_information_agent),
+        AgentTool(agent=framing_tech_agent),
+        AgentTool(agent=weather_information_agent),
     ],
 )
 
-root_agent = financial_coordinator
+root_agent = farmer_advisor
