@@ -146,12 +146,29 @@ mandi_profit = Agent(
     INSTRUCTIONS:
     Based on the MANDI_PRICE_DATA and CROP_DETAILS (e.g., expected yield, production cost),
     calculate the potential profit.
-    Use the 'append_to_state' tool to add your profit calculation to the 'PROFIT_ANALYSIS' field.
+    calculate the distance to mandi using MCPToolset
+    Use the 'append_to_state' tool to add your profit calculation and distance to mandi to the 'PROFIT_ANALYSIS' and 'DISTANCE_ANALYSIS' field.
     """,
     generate_content_config=types.GenerateContentConfig(
             temperature=0,
         ),
-    tools=[append_to_state],
+    tools=[append_to_state,
+            MCPToolset(
+                                       connection_params=StdioServerParameters(
+                                           command='npx',
+                                           args=[
+                                               "-y",
+                                               "@modelcontextprotocol/server-google-maps",
+                                           ],
+                                           # Pass the API key as an environment variable to the npx process
+                                           # This is how the MCP server for Google Maps expects the key.
+                                           env={
+                                               "GOOGLE_MAPS_API_KEY": google_maps_api_key
+                                           }
+                                       ),
+                                       # You can filter for specific Maps tools if needed:
+                                       # tool_filter=['get_directions', 'find_place_by_id']
+    )],
 )
 
 mandi_critic = Agent(
@@ -159,6 +176,8 @@ mandi_critic = Agent(
     model=model_name,
     description="Suggests ways to maximize profit from mandi sales.",
     instruction="""
+    DISTANCE_ANALYSIS:
+    {{DISTANCE_ANALYSIS? }}
     PROFIT_ANALYSIS:
     {{ PROFIT_ANALYSIS? }}
     MANDI_PRICE_DATA:
@@ -167,7 +186,7 @@ mandi_critic = Agent(
     {{ CROP_DETAILS? }}
 
     INSTRUCTIONS:
-    Review the PROFIT_ANALYSIS and suggest strategies to maximize profit, such as optimal selling times or alternative markets.
+    Review the PROFIT_ANALYSIS,DISTANCE_ANALYSIS and suggest strategies to maximize profit, such as optimal selling times or alternative markets.
     If significant improvements can be made, use the 'append_to_state' tool to add your feedback to the field 'PROFIT_OPTIMIZATION_FEEDBACK'.
     If the profit is optimal or no further improvements can be made, use the 'exit_loop' tool.
     Explain your decision and briefly summarize the feedback you have provided.
