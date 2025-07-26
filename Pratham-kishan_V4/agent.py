@@ -197,9 +197,10 @@ simple_agents = Agent(
     description=(
                 "based on parent agent just call sub agent"  # Changed description
             ),
-    sub_agents = [crop_management_agent,
-                weather_agent,
-                farming_new_tech_agent
+    tools=[
+                AgentTool(agent=crop_management_agent),
+                AgentTool(agent=weather_agent),
+                AgentTool(agent=farming_new_tech_agent),
     ],
 
 )
