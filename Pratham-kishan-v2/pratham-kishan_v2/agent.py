@@ -23,7 +23,7 @@ from .sub_agents.gov_schema_loop import gov_scheme_agent
 from .sub_agents.mandi_price_loop import mandi_price_loop
 from .sub_agents.farming_tech import farming_tech_sub_agent
 from .sub_agents.weather import weather_sub_agent
-from .sub_agents import crop_management_loop, gov_schema_loop, mandi_price_loop,weather_sub_agent,farming_tech_sub_agent
+#from .sub_agents import crop_management_loop, gov_schema_loop, mandi_price_loop,weather_sub_agent,farming_tech_sub_agent
 
 MODEL = "gemini-2.0-flash-lite"
 
