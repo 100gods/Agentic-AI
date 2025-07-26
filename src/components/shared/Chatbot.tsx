@@ -2,33 +2,19 @@
 'use client';
 
 import { useState, useContext, useRef, useEffect } from 'react';
-import Link from 'next/link';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageSquare, Send, Bot, User, Loader2, ArrowRight } from 'lucide-react';
+import { MessageSquare, Send, Bot, User, Loader2 } from 'lucide-react';
 import { LanguageContext } from '@/context/LanguageContext';
-import { orchestrate, type OrchestrateOutput } from '@/ai/flows/orchestrator';
+import { chat } from '@/ai/flows/chat';
 import { useToast } from '@/hooks/use-toast';
 
 interface Message {
     sender: 'user' | 'bot';
     text: string;
-    isCarousel?: boolean;
-    result?: OrchestrateOutput | null;
 }
-
-const features = [
-    { name: 'Crop Diagnosis', href: '/crop-diagnosis' },
-    { name: 'Weather Reports', href: '/weather' },
-    { name: 'Discussion Forums', href: '/forums' },
-    { name: 'Government Schemes', href: '/schemes' },
-    { name: "Farmer's Training", href: '/training' },
-    { name: 'Crop Management', href: '/crop-management' },
-    { name: 'Financial Advice', href: '/financial-advice' },
-    { name: 'Market Prices', href: '/market-prices' },
-];
 
 export default function Chatbot() {
     const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +24,16 @@ export default function Chatbot() {
     const { t } = useContext(LanguageContext);
     const { toast } = useToast();
     const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!isOpen) return;
+        setMessages([
+            {
+                sender: 'bot',
+                text: t('howCanIHelp')
+            }
+        ])
+    }, [isOpen, t])
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -49,16 +45,8 @@ export default function Chatbot() {
         setIsProcessing(true);
 
         try {
-            const response = await orchestrate({ query: userMessage.text });
-            let botText = '';
-            
-            if (response.agent && response.agent !== 'Unknown') {
-                 botText = response.clarifyingQuestion || t('navigatingTo', { page: t(response.agent.replace(/ /g, '')) });
-            } else {
-                 botText = response.clarifyingQuestion || t('requestUnclearDesc');
-            }
-
-            const botMessage: Message = { sender: 'bot', text: botText, result: response };
+            const response = await chat({ query: userMessage.text });
+            const botMessage: Message = { sender: 'bot', text: response.response };
             setMessages((prev) => [...prev, botMessage]);
 
         } catch (error) {
@@ -83,11 +71,6 @@ export default function Chatbot() {
             });
         }
     }, [messages]);
-
-    const getFeatureHref = (agentName: string) => {
-        const feature = features.find(f => f.name === agentName);
-        return feature ? feature.href : '#';
-    }
 
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -119,15 +102,6 @@ export default function Chatbot() {
                                     : 'bg-muted'
                                 }`}>
                                     <p className="whitespace-pre-wrap">{message.text}</p>
-                                    {message.sender === 'bot' && message.result?.agent && message.result.agent !== 'Unknown' && (
-                                        <div className="mt-2">
-                                            <Button asChild variant="secondary" size="sm">
-                                                <Link href={getFeatureHref(message.result.agent)}>
-                                                    Go to {t(message.result.agent.replace(/ /g, ''))} <ArrowRight className="ml-2 h-4 w-4" />
-                                                </Link>
-                                            </Button>
-                                        </div>
-                                    )}
                                 </div>
                                 {message.sender === 'user' && <User className="h-6 w-6 flex-shrink-0" />}
                             </div>
