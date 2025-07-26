@@ -25,7 +25,7 @@ initial_crop_agent = LlmAgent(
     tools=[google_search],
 )
 
-finance_agent = LlmAgent(name = "finance_agent",
+finance_agent = LlmAgent(name = "crop_finance_agent",
                          model=MODEL,
                          instruction=prompts.FINANCE_AGENT_PROMPT,
                          tools=[google_search]
@@ -34,14 +34,14 @@ crop_critic_agent = CriticAgent(critique_prompt=prompts.CRITIC_PROMPT)
 
 # --- The Loop Agent ---
 refinement_loop = LoopAgent(
-    name = "crop_agent",
+    name = "crop_agent_refine",
     sub_agents=[crop_critic_agent, finance_agent],
     max_iterations=3,
     #exit_condition=lambda result: "EXIT" in result.get('content', '')
 )
 
 crop_agent = SequentialAgent(
-    name="IterativeWritingPipeline",
+    name="crop_agent_first",
     sub_agents=[
         initial_crop_agent, # Run first to create initial doc
         refinement_loop       # Then run the critique/refine loop

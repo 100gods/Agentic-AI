@@ -31,7 +31,7 @@ refinement_loop = LoopAgent(
 )
 
 gov_scheme_agent = SequentialAgent(
-    name="IterativeWritingPipeline",
+    name="gov_scheme_agent_first",
     sub_agents=[
         initial_gov_agent, # Run first to create initial doc
         refinement_loop       # Then run the critique/refine loop
