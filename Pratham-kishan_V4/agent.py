@@ -49,7 +49,6 @@ scheme_researcher = LlmAgent(
 
     INSTRUCTIONS:
     Use the 'Google Search' tool to find relevant government schemes for the provided CROP_DETAILS.
-    Use the 'append_to_state' tool to add your research to the 'SCHEME_DATA' field.
     Summarize the schemes you found.
     """,
     tools=[google_search],
@@ -96,7 +95,6 @@ mandi_researcher = LlmAgent(
 
     INSTRUCTIONS:
     Use the 'Google Search' tool to find current mandi prices for the specified CROP_DETAILS.
-    Use the 'append_to_state' tool to add the mandi price data to the 'MANDI_PRICE_DATA' field.
     Summarize the prices you found.
     """,
     tools=[google_search],
@@ -175,7 +173,6 @@ weather_agent = LlmAgent(
     INSTRUCTIONS:
     Use the 'Google Search' tool to get the current and forecasted weather for the LOCATION.
     Analyze how the weather might impact the CROP_DETAILS and suggest necessary actions.
-    Use the 'append_to_state' tool to add your weather report and impact analysis to the 'WEATHER_REPORT' field.
     """,
     tools=[google_search],
 )
@@ -189,7 +186,6 @@ farming_new_tech_agent = LlmAgent(
     Based on the CROP_DETAILS, research and suggest new farming technologies,
     innovative practices, and sustainable agriculture methods that could improve yield or efficiency.
     Use the 'Google Search' tool for information.
-    Use the 'append_to_state' tool to add your suggestions to the 'NEW_TECH_SUGGESTIONS' field.
     """,
     tools=[google_search],
 )
