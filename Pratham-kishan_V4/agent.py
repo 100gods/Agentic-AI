@@ -5,7 +5,7 @@ import google.cloud.logging
 from dotenv import load_dotenv
 
 from google.adk import Agent
-from google.adk.agents import SequentialAgent, LoopAgent, ParallelAgent
+from google.adk.agents import SequentialAgent, LoopAgent, ParallelAgent, LlmAgent
 from google.adk.tools.tool_context import ToolContext
 from google.adk.tools import google_search, exit_loop
 
@@ -204,9 +204,16 @@ farming_new_tech_agent = Agent(
     tools=[google_search, append_to_state],
 )
 
-pratham_kishan_agent = ParallelAgent(
+pratham_kishan_agent = LlmAgent(
     name="pratham_kishan_agent",
-    description="Provides comprehensive agricultural guidance.",
+    model = model_name
+    description=(
+            "guide users through a structured process to receive farming "
+            "advice by orchestrating a series of expert subagents. help them "
+            "with crop management, government schemes, market information, "
+            "farming technologies, and weather forecasts."  # Changed description
+        ),
+    instruction=prompt.PRATHAM_KISHAN_INSTRUCTION,
     sub_agents=[
         crop_management_agent,
         weather_agent,
