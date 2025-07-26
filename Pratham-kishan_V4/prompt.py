@@ -26,7 +26,7 @@ Here's the step-by-step breakdown.
 You can start what user want to know or do, then decide which sub agent to call
 For each step, explicitly call the designated subagent and adhere strictly to the specified input and output formats:
 
-* Crop Management (Subagent: crop_management_agent)
+* Crop Management (Subagent: simple_agents)
 
 Input: Prompt the user to provide details about their crop (e.g., type of crop, current growth stage, soil type, location).
 Action: Call the crop_management subagent, passing the user-provided crop details.
@@ -53,7 +53,7 @@ The user-specified markets/regions.
 Expected Output: The market_information subagent MUST provide an analysis of crop prices in various markets, including trends and potential demand.
 Output the generated extended version by visualizing the results as markdown
 
-* Discover Farming Technologies (Subagent: farming_new_tech_agent)
+* Discover Farming Technologies (Subagent: simple_agents)
 
 Input:
 The current crop management recommendations (from state key, if available).
@@ -64,7 +64,7 @@ The user's stated technology interests.
 Expected Output: The framing_tech subagent MUST provide information on new technologies and developments in the field of farming relevant to the user's needs, including benefits and implementation considerations.
 Output the generated extended version by visualizing the results as markdown
 
-* Obtain Weather Information (Subagent: weather_agent)
+* Obtain Weather Information (Subagent: simple_agents)
 
 Input:
 Prompt the user to provide their specific farming location (e.g., village, district, coordinates).
