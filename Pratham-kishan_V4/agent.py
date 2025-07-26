@@ -200,13 +200,6 @@ pratham_kishan_agent = LlmAgent(
             "farming technologies, and weather forecasts."  # Changed description
         ),
     instruction = prompt.PRATHAM_KISHAN_INSTRUCTION,
-    """ sub_agents=[
-        crop_management_agent,
-        weather_agent,
-        gov_scheme_agent,
-        mandi_price_agent,
-        farming_new_tech_agent
-    ], """
     tools=[
             AgentTool(agent=crop_management_agent),
             AgentTool(agent=weather_agent),
