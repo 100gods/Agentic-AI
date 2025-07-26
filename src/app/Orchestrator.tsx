@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight, Loader2, Mic, StopCircle, Leaf, CloudSun, MessageSquare, Landmark, BookOpen, Droplets, Briefcase, BarChart } from 'lucide-react';
 import { orchestrate } from '@/ai/flows/orchestrator';
 import { type OrchestrateOutput } from '@/ai/flows/orchestrator-schemas';
+import { textToSpeech, type TextToSpeechOutput } from '@/ai/flows/tts';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import Link from 'next/link';
 
 interface OrchestratorProps {
     agentToFeatureMap: Record<string, {
@@ -36,9 +36,15 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
     const [isProcessing, setIsProcessing] = useState(false);
     const [isListening, setIsListening] = useState(false);
     const [result, setResult] = useState<OrchestrateOutput | null>(null);
+    const [audioResult, setAudioResult] = useState<TextToSpeechOutput | null>(null);
     const router = useRouter();
     const { toast } = useToast();
     const recognitionRef = useRef<any>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    useEffect(() => {
+        audioRef.current = new Audio();
+    }, []);
 
     useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -86,6 +92,7 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
         } else {
             setQuery('');
             setResult(null);
+            setAudioResult(null);
             recognitionRef.current.start();
             setIsListening(true);
         }
@@ -96,12 +103,23 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
 
         setIsProcessing(true);
         setResult(null);
+        setAudioResult(null);
 
         try {
             const response = await orchestrate({ query: currentQuery });
             setResult(response);
+            
+            const responseText = response.clarifyingQuestion || `Navigating to the ${response.agent} page.`;
+            const audioResponse = await textToSpeech(responseText);
+            setAudioResult(audioResponse);
+
+            if (audioRef.current && audioResponse.audioDataUri) {
+                audioRef.current.src = audioResponse.audioDataUri;
+                audioRef.current.play();
+            }
+
             if (response.agent && response.agent !== 'Unknown' && agentToFeatureMap[response.agent]) {
-                 // No automatic redirection
+                 router.push(agentToFeatureMap[response.agent].href);
             }
         } catch (error) {
             console.error('Orchestration failed:', error);
@@ -171,12 +189,7 @@ export default function Orchestrator({ agentToFeatureMap }: OrchestratorProps) {
                              <FeatureIcon className="h-4 w-4" />
                              <AlertTitle>Suggestion: {selectedFeature.title}</AlertTitle>
                              <AlertDescription>
-                               {result.clarifyingQuestion || `It looks like you're asking about ${selectedFeature.title.toLowerCase()}.`}
-                               <Button asChild variant="link" className="p-0 h-auto ml-1">
-                                    <Link href={selectedFeature.href}>
-                                        Click here to go to the {selectedFeature.title} page.
-                                    </Link>
-                               </Button>
+                               {result.clarifyingQuestion || `Redirecting you to the ${selectedFeature.title} page...`}
                              </AlertDescription>
                            </Alert>
                         ) : (

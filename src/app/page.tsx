@@ -59,8 +59,7 @@ const features = [
 ];
 
 const agentToFeatureMap: Record<string, { title: string; description: string; href: string; }> = features.reduce((acc, feature) => {
-  const { icon, ...rest } = feature;
-  acc[feature.title] = rest;
+  acc[feature.title] = { title: feature.title, description: feature.description, href: feature.href };
   return acc;
 }, {} as Record<string, { title: string; description: string; href: string; }>);
 
