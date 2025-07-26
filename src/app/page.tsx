@@ -115,7 +115,7 @@ export default function Home() {
       <div className="flex">
         <main className="flex-1 flex flex-col items-center p-4 sm:p-6 md:p-8 pt-24">
           <div className="text-center mb-12">
-            <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl font-bold text-primary">Pratham Kishan</h1>
+            <h1 className="font-headline text-3xl sm:text-4xl font-bold text-primary">Pratham Kishan</h1>
             <p className="mt-4 text-lg sm:text-xl text-foreground/80">{t('intelligentPartner')}</p>
           </div>
           
