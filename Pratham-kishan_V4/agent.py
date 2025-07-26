@@ -213,7 +213,7 @@ pratham_kishan_agent = LlmAgent(
             "with crop management, government schemes, market information, "
             "farming technologies, and weather forecasts."  # Changed description
         ),
-    instruction=prompt.PRATHAM_KISHAN_INSTRUCTION,
+    #instruction=prompt.PRATHAM_KISHAN_INSTRUCTION,
     sub_agents=[
         crop_management_agent,
         weather_agent,
