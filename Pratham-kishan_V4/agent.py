@@ -21,7 +21,7 @@ load_dotenv()
 
 model_name = os.getenv("MODEL")
 print(model_name)
-
+google_maps_api_key = os.environ.get("GOOGLE_MAPS_API_KEY")
 
 # Tools
 def append_to_state(
