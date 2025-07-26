@@ -192,7 +192,7 @@ farming_new_tech_agent = Agent(
 )
 
 simple_agents = Agent(
-    name = "simple agents",
+    name = "simple_agents",
     model = model_name,
     description=(
                 "based on parent agent just call sub agent"  # Changed description
@@ -200,7 +200,7 @@ simple_agents = Agent(
     sub_agents = [crop_management_agent,
                 weather_agent,
                 farming_new_tech_agent
-    ]
+    ],
 
 )
 
