@@ -47,6 +47,7 @@ Output the generated extended version by visualizing the results as markdown
 Input:
 Prompt the user to specify the crop(s) they are interested in.
 Prompt the user to specify the markets or regions they want to analyze for prices.
+Prompt the user to specify the production cost.
 Action: Call the market_information subagent, providing:
 The user-specified crop(s).
 The user-specified markets/regions.
