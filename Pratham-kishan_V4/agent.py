@@ -147,6 +147,7 @@ mandi_profit = Agent(
 
     INSTRUCTIONS:
     Based on the MANDI_PRICE_DATA and CROP_DETAILS (e.g., expected yield, production cost),
+    all map calculation consider country to be India and state to be karnatka untill mentioned otherwise
     calculate the potential profit.
     calculate the maps_directions to mandi or Vegetable mandi or fruit mandi or Vegetable market or fruit market from farmer location  using MCPToolset
     Use the 'append_to_state' tool to add your profit calculation and distance to mandi to the 'PROFIT_ANALYSIS' and 'DISTANCE_ANALYSIS' field.
