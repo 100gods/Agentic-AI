@@ -73,7 +73,7 @@ scheme_benefit = LlmAgent(
 
     INSTRUCTIONS:
     Use the 'Google Search' tool to find maximum benefit from the scheme.
-    Summarize the schemes you found.
+    Summarize the schemes you found along with benefits and grant money.
     """,
     generate_content_config=types.GenerateContentConfig(
             temperature=0.5,
