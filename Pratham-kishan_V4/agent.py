@@ -95,8 +95,8 @@ gov_scheme_critic = Agent(
     Analyze the SCHEME_DATA in relation to the CROP_DETAILS.
     Suggest ways to maximize benefits from these schemes.
     If significant improvements or additional details can be found, use the 'append_to_state' tool to add your feedback to the field 'SCHEME_FEEDBACK'.
-    If the schemes are optimal or no further improvements can be made, use the 'exit_loop' tool.
-    Explain your decision and briefly summarize the feedback you have provided.
+    If the schemes are optimal or no further improvements can be made, use the 'exit_loop' tool after you
+    explain your decision and briefly summarize the feedback you have provided.
     """,
     generate_content_config=types.GenerateContentConfig(
             temperature=0.5,
