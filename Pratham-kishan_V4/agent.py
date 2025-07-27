@@ -111,7 +111,7 @@ gov_scheme_agent = LoopAgent(
         scheme_researcher,
         gov_scheme_critic
     ],
-    max_iterations=2,
+    max_iterations=3,
 )
 
 # Mandi Price Agents
